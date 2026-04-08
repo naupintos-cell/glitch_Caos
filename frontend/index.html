@@ -2,7 +2,11 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a0a0f">
 <title>GLITCH — el juego que te odia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -980,13 +984,120 @@ body {
   letter-spacing: 0.05em;
 }
 
-/* RESPONSIVE */
-@media (max-width: 400px) {
-  #logo { font-size: 28px; }
-  .tile { font-size: 18px; }
-  .hud-val { font-size: 14px; }
-  #landing-logo { font-size: 38px; }
-  #landing-logo::before, #landing-logo::after { font-size: 38px; }
+/* ─── MOBILE FIRST ─────────────────────────────────────────────────────────── */
+
+/* Safe area para iPhone con notch/dynamic island */
+#wrap {
+  padding-left:  max(12px, env(safe-area-inset-left));
+  padding-right: max(12px, env(safe-area-inset-right));
+  padding-bottom: max(40px, env(safe-area-inset-bottom));
+}
+#landing {
+  padding-left:  max(20px, env(safe-area-inset-left));
+  padding-right: max(20px, env(safe-area-inset-right));
+  padding-top:   max(20px, env(safe-area-inset-top));
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
+}
+#combo-banner {
+  top: max(20px, env(safe-area-inset-top));
+}
+
+/* Touch targets mínimos 44px (Apple HIG / Google Material) */
+.tile {
+  min-height: 44px;
+  min-width:  44px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.pw-btn, .win-btn, #btn-start, #btn-share, .pw-skip {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.pw-skip {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+}
+
+/* Eliminar hover en touch (evita estados pegados en mobile) */
+@media (hover: none) {
+  .tile:hover:not(.mat):not(.sel) {
+    background: var(--bg2);
+    border-color: var(--border);
+    transform: none;
+  }
+  .pw-btn:hover { background: var(--accent); transform: none; }
+  .win-btn:hover { background: var(--accent); transform: none; }
+  #btn-start:hover { background: var(--accent); transform: none; box-shadow: none; }
+  #btn-start:hover #btn-start-arrow { transform: none; }
+  #footer-brand:hover { opacity: 1; }
+}
+
+/* Pantallas pequeñas — iPhone SE, Android 360px */
+@media (max-width: 380px) {
+  #logo { font-size: 26px; }
+  #logo::before, #logo::after { font-size: 26px; }
+
+  #landing-logo { font-size: 34px; }
+  #landing-logo::before, #landing-logo::after { font-size: 34px; }
+  #landing-tag { font-size: 9px; letter-spacing: 0.12em; margin-bottom: 18px; }
+  #chat-lines { padding: 10px 12px; }
+  .chat-line { font-size: 11.5px; gap: 8px; }
+  .chat-who { width: 40px; }
+
+  #ai-txt { font-size: 13px; }
+  #ai-face { font-size: 22px; }
+
+  .hud-val { font-size: 13px; }
+  .hud-label { font-size: 8px; }
+  .hud-cell { padding: 5px 4px; }
+
+  .tile { font-size: 18px; border-radius: 8px; }
+  #board { gap: 5px; }
+
+  #btn-start { padding: 12px 24px; font-size: 14px; }
+
+  #streak-label { font-size: 9px; width: 38px; }
+  .streak-dot { width: 7px; height: 7px; }
+  #streak-bonus { font-size: 9px; }
+  #move-counter { font-size: 9px; }
+}
+
+/* Pantallas medianas — iPhone 12/13/14, Android estándar */
+@media (min-width: 381px) and (max-width: 430px) {
+  #landing-logo { font-size: 44px; }
+  #landing-logo::before, #landing-logo::after { font-size: 44px; }
+  .tile { font-size: 20px; }
+  #ai-txt { font-size: 14px; }
+}
+
+/* Landscape mobile — juego horizontal */
+@media (max-height: 500px) and (orientation: landscape) {
+  #logo-wrap { margin-bottom: 6px; }
+  #logo { font-size: 22px; }
+  #logo::before, #logo::after { font-size: 22px; }
+  #session-badge { display: none; }
+  #ai-bar { margin-bottom: 6px; padding: 8px 12px 10px; }
+  #ai-face { font-size: 18px; }
+  #ai-txt { font-size: 12px; }
+  #hud { margin-bottom: 4px; }
+  .hud-cell { padding: 4px 6px; }
+  .hud-val { font-size: 13px; }
+  #streak-wrap { margin-bottom: 4px; height: 22px; }
+  #mult-bar-wrap { margin-bottom: 6px; }
+  #best-indicator { margin-bottom: 4px; min-height: 10px; }
+  #board { gap: 4px; }
+  .tile { font-size: 16px; border-radius: 7px; }
+  #site-footer { margin-top: 12px; padding: 8px 0 4px; }
+}
+
+/* Desktop — por arriba de 520px el juego ya está centrado y no necesita ajustes */
+@media (min-width: 520px) {
+  #wrap { padding-top: 24px; }
+  #landing-logo { font-size: 64px; }
+  #landing-logo::before, #landing-logo::after { font-size: 64px; }
 }
 </style>
 </head>
