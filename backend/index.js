@@ -10,9 +10,9 @@ const app = express();
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
 
 app.use(cors({
-  origin: (origin, cb) => {
-    // Permite requests sin origin (ej: curl, Postman) solo en dev
-    if (!origin && process.env.NODE_ENV !== 'production') return cb(null, true);
+origin: (origin, cb) => {
+    // Sin origin: browser directo, health checks, Railway — siempre permitido
+    if (!origin) return cb(null, true);
     if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
     cb(new Error(`Origin no permitido: ${origin}`));
   },
