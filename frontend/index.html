@@ -1,159 +1,2130 @@
-require('dotenv').config();
-const express = require('express');
-const cors    = require('cors');
-const { MercadoPagoConfig, Preference, Payment } = require('mercadopago');
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>GLITCH — el juego que te odia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --bg2: #111118;
+  --bg3: #1a1a24;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --txt: #e8e8f0;
+  --txt2: #8888a0;
+  --txt3: #44445a;
+  --accent: #7F77DD;
+  --accent2: #534AB7;
+  --green: #4ade80;
+  --red: #f87171;
+  --orange: #fb923c;
+  --yellow: #facc15;
+  --cursed: #D85A30;
+  --mono: 'Space Mono', monospace;
+  --sans: 'Syne', sans-serif;
+}
 
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body {
+  background: var(--bg);
+  color: var(--txt);
+  font-family: var(--mono);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* GLITCH TEXT EFFECT */
+@keyframes glitch1 {
+  0%,100%{clip-path:inset(0 0 98% 0);transform:translate(-2px,0)}
+  20%{clip-path:inset(20% 0 60% 0);transform:translate(2px,0)}
+  40%{clip-path:inset(50% 0 30% 0);transform:translate(-1px,0)}
+  60%{clip-path:inset(80% 0 5% 0);transform:translate(3px,0)}
+  80%{clip-path:inset(10% 0 85% 0);transform:translate(-3px,0)}
+}
+@keyframes glitch2 {
+  0%,100%{clip-path:inset(50% 0 30% 0);transform:translate(2px,0)}
+  25%{clip-path:inset(5% 0 80% 0);transform:translate(-2px,0)}
+  50%{clip-path:inset(70% 0 10% 0);transform:translate(1px,0)}
+  75%{clip-path:inset(30% 0 50% 0);transform:translate(-3px,0)}
+}
+@keyframes scanline {
+  0%{transform:translateY(-100%)}
+  100%{transform:translateY(100vh)}
+}
+@keyframes shake {
+  0%,100%{transform:translateX(0) rotate(0)}
+  20%{transform:translateX(-5px) rotate(-0.5deg)}
+  40%{transform:translateX(5px) rotate(0.5deg)}
+  60%{transform:translateX(-3px) rotate(0)}
+  80%{transform:translateX(3px) rotate(0.5deg)}
+}
+@keyframes tileIn {
+  from{opacity:0;transform:scale(0.6) rotate(-8deg)}
+  to{opacity:1;transform:scale(1) rotate(0)}
+}
+@keyframes pulse-ring {
+  0%{transform:scale(0.8);opacity:1}
+  100%{transform:scale(1.6);opacity:0}
+}
+@keyframes streak-flash {
+  0%{transform:scaleX(0);opacity:1}
+  60%{transform:scaleX(1);opacity:1}
+  100%{transform:scaleX(1);opacity:0}
+}
+@keyframes float-score {
+  0%{opacity:1;transform:translateY(0) scale(1)}
+  100%{opacity:0;transform:translateY(-50px) scale(1.4)}
+}
+@keyframes mult-pop {
+  0%{transform:scale(1)}
+  40%{transform:scale(1.5)}
+  100%{transform:scale(1)}
+}
+@keyframes ai-think {
+  0%,100%{opacity:1}
+  50%{opacity:0.3}
+}
+@keyframes card-move {
+  0%{transform:scale(1)}
+  30%{transform:scale(0.85) rotate(3deg)}
+  70%{transform:scale(0.85) rotate(-3deg)}
+  100%{transform:scale(1)}
+}
+@keyframes reveal-wave {
+  0%{background:var(--accent);transform:scale(1.1)}
+  100%{background:transparent;transform:scale(1)}
+}
+@keyframes confetti-fall {
+  to{transform:translateY(120vh) rotate(720deg);opacity:0}
+}
+
+#wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px 12px 40px;
+  position: relative;
+}
+
+/* SCANLINE */
+.scanline {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(transparent, rgba(127,119,221,0.08), transparent);
+  pointer-events: none;
+  z-index: 100;
+  animation: scanline 8s linear infinite;
+}
+
+/* LOGO */
+#logo-wrap {
+  text-align: center;
+  margin-bottom: 14px;
+  position: relative;
+}
+#logo {
+  font-family: var(--sans);
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  position: relative;
+  display: inline-block;
+  color: var(--txt);
+}
+#logo::before,
+#logo::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  font-family: var(--sans);
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+#logo::before {
+  color: var(--red);
+  animation: glitch1 4s infinite;
+  animation-delay: 1s;
+}
+#logo::after {
+  color: var(--accent);
+  animation: glitch2 4s infinite;
+  animation-delay: 1.5s;
+}
+#logo .i-accent { color: var(--accent); }
+#logo-sub {
+  font-size: 10px;
+  color: var(--txt3);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* SESSION BADGE */
+#session-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 10px;
+  color: var(--txt2);
+  margin-top: 6px;
+}
+#session-badge span { color: var(--accent); font-weight: 700; }
+
+/* AI BAR */
+@keyframes ai-enter {
+  from { opacity:0; transform: translateY(6px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+@keyframes ai-pulse-border {
+  0%,100% { border-color: rgba(127,119,221,0.15); }
+  50%      { border-color: rgba(127,119,221,0.45); }
+}
+@keyframes face-bounce {
+  0%,100% { transform: translateY(0) scale(1) rotate(0); }
+  30%     { transform: translateY(-4px) scale(1.15) rotate(-6deg); }
+  60%     { transform: translateY(1px) scale(0.95) rotate(3deg); }
+}
+@keyframes face-shake {
+  0%,100% { transform: rotate(0); }
+  20%     { transform: rotate(-12deg) scale(1.1); }
+  40%     { transform: rotate(10deg) scale(1.15); }
+  60%     { transform: rotate(-8deg) scale(1.1); }
+  80%     { transform: rotate(6deg); }
+}
+@keyframes txt-slide {
+  from { opacity:0; transform: translateX(-8px); }
+  to   { opacity:1; transform: translateX(0); }
+}
+
+#ai-bar {
+  margin-bottom: 14px;
+  padding: 14px 16px 16px;
+  background: var(--bg2);
+  border: 1px solid rgba(127,119,221,0.15);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  animation: ai-pulse-border 3s ease-in-out infinite;
+}
+#ai-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 0% 50%, rgba(127,119,221,0.06) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+#ai-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+#ai-face {
+  font-size: 26px;
+  flex-shrink: 0;
+  display: block;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  cursor: default;
+}
+#ai-face:hover { animation: face-bounce 0.5s ease-out; }
+#ai-name {
+  font-size: 9px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-family: var(--mono);
+  font-weight: 700;
+}
+#ai-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  color: var(--txt3);
+  font-family: var(--mono);
+}
+#ai-status-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 5px var(--green);
+  flex-shrink: 0;
+  animation: ai-think 2s infinite;
+}
+
+#ai-txt {
+  font-size: 15px;
+  color: var(--txt);
+  line-height: 1.5;
+  font-family: var(--mono);
+  font-style: italic;
+  position: relative;
+  animation: txt-slide 0.25s ease-out;
+  min-height: 22px;
+}
+#ai-txt em {
+  color: var(--accent);
+  font-style: normal;
+  font-weight: 700;
+}
+#ai-txt.negative { color: var(--red); }
+#ai-txt.positive { color: var(--green); }
+#ai-txt.cursed-msg { color: var(--cursed); }
+
+.ai-typing::after {
+  content: '▋';
+  animation: ai-think 0.5s infinite;
+  color: var(--accent);
+  font-style: normal;
+}
+
+/* Face states */
+#ai-face.bounce { animation: face-bounce 0.5s ease-out; }
+#ai-face.shake  { animation: face-shake 0.4s ease-out; }
+
+/* HUD */
+#hud {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.hud-cell {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 6px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hud-label {
+  font-size: 9px;
+  color: var(--txt3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 3px;
+}
+.hud-val {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--txt);
+  font-family: var(--sans);
+  transition: color 0.3s;
+}
+#h-mult { transition: transform 0.2s, color 0.3s; }
+#h-mult.pop { animation: mult-pop 0.3s ease-out; }
+
+/* STREAK */
+#streak-wrap {
+  margin-bottom: 8px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+#streak-label {
+  font-size: 10px;
+  color: var(--txt3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  width: 45px;
+  flex-shrink: 0;
+}
+#streak-dots {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+}
+.streak-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  flex-shrink: 0;
+}
+.streak-dot.on {
+  background: var(--green);
+  border-color: var(--green);
+  box-shadow: 0 0 6px rgba(74,222,128,0.5);
+  transform: scale(1.15);
+}
+.streak-dot.on.fire {
+  background: var(--orange);
+  border-color: var(--orange);
+  box-shadow: 0 0 8px rgba(251,146,60,0.6);
+}
+#streak-bonus {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--orange);
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+#streak-bonus.show { opacity: 1; }
+
+/* MULT BAR */
+#mult-bar-wrap {
+  height: 4px;
+  background: var(--bg3);
+  border-radius: 3px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+#mult-bar {
+  height: 4px;
+  border-radius: 3px;
+  background: var(--accent);
+  transition: width 0.4s cubic-bezier(0.4,0,0.2,1), background 0.3s;
+}
+
+/* BOARD */
+#board-wrap {
+  position: relative;
+  margin-bottom: 10px;
+}
+#board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.tile {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.12s, background 0.1s, border-color 0.15s, box-shadow 0.15s;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+.tile::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+.tile:hover:not(.mat):not(.sel) {
+  background: var(--bg3);
+  border-color: var(--border2);
+  transform: translateY(-1px);
+}
+.tile.sel {
+  background: rgba(127,119,221,0.15);
+  border-color: var(--accent);
+  transform: scale(0.93);
+  box-shadow: 0 0 12px rgba(127,119,221,0.3);
+}
+.tile.mat {
+  background: rgba(74,222,128,0.08);
+  border-color: rgba(74,222,128,0.25);
+  cursor: default;
+  opacity: 0.4;
+}
+.tile.bad {
+  background: rgba(248,113,113,0.15);
+  border-color: var(--red);
+  animation: shake 0.3s ease-out;
+}
+.tile.cursed {
+  border-color: var(--cursed);
+  border-width: 1.5px;
+  box-shadow: 0 0 8px rgba(216,90,48,0.2);
+}
+.tile.cursed::after {
+  content: '☠';
+  font-size: 8px;
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  opacity: 0.5;
+  color: var(--cursed);
+}
+.tile.hint-glow {
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(127,119,221,0.4);
+}
+.tile.hint-glow-fake {
+  border-color: var(--red);
+  box-shadow: 0 0 10px rgba(248,113,113,0.3);
+}
+.tile.tile-in {
+  animation: tileIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.tile.moving {
+  animation: card-move 0.4s ease-in-out;
+}
+.tile.just-matched {
+  animation: reveal-wave 0.4s ease-out;
+}
+
+/* PULSE RING on match */
+.pulse-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  border: 2px solid var(--green);
+  animation: pulse-ring 0.5s ease-out forwards;
+  pointer-events: none;
+}
+
+/* FLASH OVERLAY */
+.flash-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(127,119,221,0.12);
+  border-radius: 10px;
+  z-index: 5;
+  pointer-events: none;
+}
+.flash-overlay.on { display: block; }
+
+/* FLOAT SCORE */
+.float-score {
+  position: fixed;
+  font-family: var(--sans);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--green);
+  pointer-events: none;
+  z-index: 200;
+  animation: float-score 0.8s ease-out forwards;
+  text-shadow: 0 0 10px rgba(74,222,128,0.5);
+}
+.float-score.neg { color: var(--red); }
+
+/* STREAK BAR */
+.streak-bar {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 2px;
+  background: var(--orange);
+  width: 0;
+  animation: streak-flash 0.5s ease-out forwards;
+}
+
+/* BOTTOM MSG */
+#bottom-msg {
+  font-size: 11px;
+  color: var(--txt2);
+  text-align: center;
+  min-height: 16px;
+  margin-bottom: 10px;
+  font-family: var(--mono);
+}
+
+/* PAYWALL */
+.paywall-wrap {
+  position: absolute;
+  inset: 0;
+  background: rgba(10,10,15,0.9);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  backdrop-filter: blur(4px);
+  z-index: 10;
+}
+.paywall-wrap.on { display: flex; }
+.pw-box {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  padding: 22px 20px;
+  max-width: 280px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.pw-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+.pw-box .pf { font-size: 32px; display: block; margin-bottom: 8px; }
+.pw-box h3 {
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.pw-box p {
+  font-size: 11.5px;
+  color: var(--txt2);
+  line-height: 1.65;
+  margin-bottom: 14px;
+}
+.pw-price {
+  font-family: var(--sans);
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--txt);
+}
+.pw-sub {
+  font-size: 10px;
+  color: var(--txt3);
+  margin-bottom: 14px;
+  display: block;
+}
+.pw-btn {
+  width: 100%;
+  padding: 11px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--sans);
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: background 0.15s, transform 0.1s;
+  letter-spacing: -0.01em;
+}
+.pw-btn:hover { background: var(--accent2); transform: translateY(-1px); }
+.pw-btn:active { transform: translateY(0); }
+.pw-skip {
+  background: none;
+  border: none;
+  font-size: 10.5px;
+  color: var(--txt3);
+  cursor: pointer;
+  font-family: var(--mono);
+  transition: color 0.15s;
+}
+.pw-skip:hover { color: var(--txt2); }
+
+/* WIN BOX */
+.win-box {
+  text-align: center;
+  padding: 20px 0;
+  display: none;
+}
+.win-box.on { display: block; }
+.win-box h3 {
+  font-family: var(--sans);
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.win-box p {
+  font-size: 12px;
+  color: var(--txt2);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+/* SCORE CARD (viral share) */
+#score-card {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+#score-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+.sc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+.sc-row:last-child { border-bottom: none; }
+.sc-row-label { color: var(--txt2); }
+.sc-row-val { font-weight: 700; font-family: var(--sans); color: var(--txt); }
+.sc-row-val.highlight { color: var(--accent); font-size: 15px; }
+.sc-share {
+  width: 100%;
+  margin-top: 12px;
+  padding: 9px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--txt2);
+  font-size: 11px;
+  font-family: var(--mono);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.sc-share:hover { border-color: var(--accent); color: var(--accent); }
+.sc-share.copied { border-color: var(--green); color: var(--green); }
+
+.win-btn {
+  padding: 10px 24px;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--sans);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+.win-btn:hover { background: var(--accent2); transform: translateY(-1px); }
+
+/* FOOTER */
+#site-footer {
+  margin-top: 32px;
+  padding: 16px 0 8px;
+  border-top: 1px solid var(--border);
+}
+#footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 10px;
+  font-family: var(--mono);
+  color: var(--txt3);
+  letter-spacing: 0.08em;
+}
+#footer-brand {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  transition: opacity 0.15s;
+}
+#footer-brand:hover { opacity: 0.7; }
+#footer-k {
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+#footer-airo {
+  font-family: var(--sans);
+  font-weight: 700;
+  font-size: 11px;
+  color: var(--txt2);
+  letter-spacing: 0.05em;
+}
+#footer-sep { color: var(--txt3); opacity: 0.5; }
+#footer-tagline { color: var(--txt3); font-style: italic; }
+#footer-year { color: var(--txt3); }
+
+/* CONFETTI */
+.confetti-piece {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 300;
+  animation: confetti-fall linear forwards;
+}
+
+/* LEVEL INTRO */
+#level-intro {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+}
+#level-intro-txt {
+  font-family: var(--sans);
+  font-size: 52px;
+  font-weight: 800;
+  color: var(--txt);
+  letter-spacing: -0.04em;
+  text-align: center;
+}
+#level-intro-sub {
+  font-size: 12px;
+  color: var(--txt3);
+  text-align: center;
+  margin-top: 8px;
+  font-family: var(--mono);
+}
+
+/* COMBO BANNER */
+#combo-banner {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-80px);
+  background: var(--orange);
+  color: var(--bg);
+  font-family: var(--sans);
+  font-weight: 800;
+  font-size: 14px;
+  padding: 8px 20px;
+  border-radius: 100px;
+  z-index: 400;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  white-space: nowrap;
+  pointer-events: none;
+}
+#combo-banner.show { transform: translateX(-50%) translateY(0); }
+
+/* BEST SCORE INDICATOR */
+#best-indicator {
+  font-size: 10px;
+  color: var(--yellow);
+  text-align: center;
+  margin-bottom: 8px;
+  min-height: 14px;
+  letter-spacing: 0.05em;
+}
+
+/* LANDING */
+@keyframes land-logo-in {
+  from { opacity:0; transform: translateY(-20px) scale(0.9); filter: blur(6px); }
+  to   { opacity:1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+@keyframes chat-line-in {
+  from { opacity:0; transform: translateX(-6px); }
+  to   { opacity:1; transform: translateX(0); }
+}
+@keyframes btn-appear {
+  from { opacity:0; transform: translateY(10px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+@keyframes cursor-blink {
+  0%,100%{opacity:1} 50%{opacity:0}
+}
+
+#landing {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+#landing.hide {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+#landing-inner {
+  width: 100%;
+  max-width: 460px;
+  text-align: center;
+}
+
+#landing-logo {
+  font-family: var(--sans);
+  font-size: 52px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--txt);
+  position: relative;
+  display: inline-block;
+  animation: land-logo-in 0.7s cubic-bezier(0.16,1,0.3,1) both;
+  margin-bottom: 4px;
+}
+#landing-logo span { color: var(--accent); }
+#landing-logo::before, #landing-logo::after {
+  content: attr(data-text);
+  position: absolute; top:0; left:0; width:100%; height:100%;
+  font-family: var(--sans); font-size:52px; font-weight:800; letter-spacing:-0.04em;
+}
+#landing-logo::before { color:var(--red); animation: glitch1 4s infinite 1.5s; }
+#landing-logo::after  { color:var(--accent); animation: glitch2 4s infinite 2s; }
+
+#landing-tag {
+  font-size: 11px;
+  color: var(--txt3);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  animation: land-logo-in 0.7s 0.2s both;
+}
+
+/* CHAT WINDOW */
+#chat-window {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 22px;
+  text-align: left;
+  animation: land-logo-in 0.6s 0.3s both;
+}
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 12px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+}
+.chat-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.chat-dot.red    { background: #f87171; }
+.chat-dot.yellow { background: #facc15; }
+.chat-dot.green  { background: #4ade80; }
+.chat-title {
+  font-size: 10px;
+  color: var(--txt3);
+  font-family: var(--mono);
+  margin-left: 4px;
+}
+#chat-lines {
+  padding: 14px 16px;
+  min-height: 80px;
+}
+.chat-line {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  animation: chat-line-in 0.3s ease-out both;
+  font-size: 13px;
+  line-height: 1.55;
+  font-family: var(--mono);
+}
+.chat-line:last-child { margin-bottom: 0; }
+.chat-who {
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  margin-top: 2px;
+  flex-shrink: 0;
+  width: 50px;
+}
+.chat-who.sys { color: var(--txt3); }
+.chat-who.ai  { color: var(--accent); }
+.chat-msg { color: var(--txt2); }
+.chat-msg.ai-msg { color: var(--txt); }
+.chat-cursor {
+  display: inline-block;
+  width: 8px; height: 13px;
+  background: var(--accent);
+  vertical-align: middle;
+  animation: cursor-blink 0.8s infinite;
+  margin-left: 2px;
+}
+
+/* START BUTTON */
+#btn-start {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: var(--sans);
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  margin-bottom: 14px;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+  letter-spacing: -0.01em;
+}
+#btn-start:hover {
+  background: var(--accent2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(127,119,221,0.35);
+}
+#btn-start:active { transform: translateY(0); }
+#btn-start-arrow {
+  font-size: 20px;
+  transition: transform 0.2s;
+}
+#btn-start:hover #btn-start-arrow { transform: translateX(4px); }
+
+#landing-sub {
+  font-size: 10px;
+  color: var(--txt3);
+  font-family: var(--mono);
+  letter-spacing: 0.05em;
+}
+
+/* RESPONSIVE */
+@media (max-width: 400px) {
+  #logo { font-size: 28px; }
+  .tile { font-size: 18px; }
+  .hud-val { font-size: 14px; }
+  #landing-logo { font-size: 38px; }
+  #landing-logo::before, #landing-logo::after { font-size: 38px; }
+}
+</style>
+</head>
+<body>
+
+<div class="scanline"></div>
+
+<!-- LANDING -->
+<div id="landing">
+  <div id="landing-inner">
+    <div id="landing-logo" data-text="GLITCH">GL<span>I</span>TCH</div>
+    <div id="landing-tag">el juego que te odia</div>
+
+    <div id="chat-window">
+      <div class="chat-header">
+        <span class="chat-dot red"></span>
+        <span class="chat-dot yellow"></span>
+        <span class="chat-dot green"></span>
+        <span class="chat-title">terminal — GLITCH-IA v0.9</span>
+      </div>
+      <div id="chat-lines"></div>
+    </div>
+
+    <button id="btn-start" style="opacity:0;pointer-events:none">
+      <span id="btn-start-txt">Jugar igual</span>
+      <span id="btn-start-arrow">→</span>
+    </button>
+    <div id="landing-sub">un juego de memoria · con IA que odia su trabajo</div>
+  </div>
+</div>
+
+<!-- LEVEL INTRO -->
+<div id="level-intro">
+  <div>
+    <div id="level-intro-txt">NIVEL 1</div>
+    <div id="level-intro-sub">buena suerte. vas a necesitarla.</div>
+  </div>
+</div>
+
+<div id="combo-banner">🔥 COMBO ×3</div>
+
+<div id="wrap">
+
+  <div id="logo-wrap">
+    <div id="logo" data-text="GLITCH">GL<span class="i-accent">I</span>TCH</div>
+    <div id="logo-sub">el juego que te odia</div>
+    <div id="session-badge">sesión #<span id="session-num">1</span> · <span id="session-plays">0</span> partidas hoy</div>
+  </div>
+
+  <div id="ai-bar">
+    <div id="ai-header">
+      <span id="ai-face">🤖</span>
+      <div>
+        <div id="ai-name">GLITCH-IA v0.9</div>
+        <div id="ai-status"><span id="ai-status-dot"></span>procesando tu fracaso</div>
+      </div>
+    </div>
+    <div id="ai-txt">—</div>
+  </div>
+
+  <div id="hud">
+    <div class="hud-cell"><div class="hud-label">nivel</div><div class="hud-val" id="h-lvl">1</div></div>
+    <div class="hud-cell"><div class="hud-label">score</div><div class="hud-val" id="h-score">0</div></div>
+    <div class="hud-cell"><div class="hud-label">×mult</div><div class="hud-val" id="h-mult">×1.0</div></div>
+    <div class="hud-cell"><div class="hud-label">tiempo</div><div class="hud-val" id="h-time">0s</div></div>
+  </div>
+
+  <div id="streak-wrap">
+    <div id="streak-label">racha</div>
+    <div id="streak-dots"></div>
+    <div id="streak-bonus"></div>
+    <div id="move-counter" style="font-size:10px;color:var(--txt3);white-space:nowrap;margin-left:6px">0 mov · 0/6</div>
+  </div>
+
+  <div id="mult-bar-wrap"><div id="mult-bar" style="width:4%"></div></div>
+  <div id="best-indicator"></div>
+
+  <div id="board-wrap">
+    <div id="board"></div>
+    <div class="flash-overlay" id="flash"></div>
+    <div class="paywall-wrap" id="pw">
+      <div class="pw-box">
+        <span class="pf">🤖</span>
+        <h3 id="pw-title">Momento incómodo.</h3>
+        <p id="pw-body">Esto es un paywall. No hay forma elegante de decirlo. Son $3.000. Menos que un café con medialunas en cualquier lado.</p>
+        <div class="pw-price">$3.000 ARS</div>
+        <span class="pw-sub">pago único · sin newsletter · sin drama</span>
+        <button class="pw-btn" id="btn-pay">Pagar $3.000 — MercadoPago</button>
+        <button class="pw-btn pw-btn-life" id="btn-life" style="background:var(--orange);margin-bottom:8px;display:none">💀 Usar última vida (1 vez gratis)</button>
+        <button class="pw-skip" id="btn-skip">Ahora no (el caos sigue igual)</button>
+      </div>
+    </div>
+    <div class="win-box" id="winbox">
+      <h3 id="win-h">Nivel completado.</h3>
+      <p id="win-p">Registrado. A nadie le importa.</p>
+      <div id="score-card">
+        <div class="sc-row"><span class="sc-row-label">score total</span><span class="sc-row-val highlight" id="sc-score">0</span></div>
+        <div class="sc-row"><span class="sc-row-label">mult final</span><span class="sc-row-val" id="sc-mult">×1.0</span></div>
+        <div class="sc-row"><span class="sc-row-label">mejor racha</span><span class="sc-row-val" id="sc-streak">0</span></div>
+        <div class="sc-row"><span class="sc-row-label">jugadas</span><span class="sc-row-val" id="sc-moves">0</span></div>
+        <div class="sc-row"><span class="sc-row-label">tiempo</span><span class="sc-row-val" id="sc-time">0s</span></div>
+        <div class="sc-row"><span class="sc-row-label">record personal</span><span class="sc-row-val" id="sc-best">—</span></div>
+        <button class="sc-share" id="btn-share">📋 copiar resultado para compartir</button>
+      </div>
+      <button class="win-btn" id="btn-next">Siguiente nivel →</button>
+    </div>
+  </div>
+
+  <div id="bottom-msg"></div>
+
+  <footer id="site-footer">
+    <div id="footer-inner">
+      <a href="https://kairo.com.ar" target="_blank" rel="noopener" id="footer-brand">
+        <span id="footer-k">K</span><span id="footer-airo">AIRO</span>
+      </a>
+      <span id="footer-sep">·</span>
+      <span id="footer-tagline">Make it simple</span>
+      <span id="footer-sep">·</span>
+      <span id="footer-year">2026</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
-const app = express();
+// Cambiá esta URL por la de tu backend en Railway cuando hagas el deploy
+const BACKEND_URL = 'https://TU-BACKEND.up.railway.app';
 
-// CORS: solo permite requests desde tu dominio del juego
-const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
+// ID único de sesión del jugador — persiste en localStorage
+function getSessionId() {
+  try {
+    let id = localStorage.getItem('glitch_session_id');
+    if (!id) {
+      id = 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
+      localStorage.setItem('glitch_session_id', id);
+    }
+    return id;
+  } catch(e) {
+    return 'sess_' + Math.random().toString(36).slice(2, 12);
+  }
+}
+const SESSION_ID = getSessionId();
 
-app.use(cors({
-  origin: (origin, cb) => {
-    // Permite requests sin origin (ej: curl, Postman) solo en dev
-    if (!origin && process.env.NODE_ENV !== 'production') return cb(null, true);
-    if (ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
-    cb(new Error(`Origin no permitido: ${origin}`));
+// Al cargar la página: verificar si el jugador ya pagó en una sesión anterior
+async function checkExistingPayment() {
+  try {
+    const r = await fetch(`${BACKEND_URL}/check-payment/${SESSION_ID}`);
+    const data = await r.json();
+    if (data.paid) {
+      paid = true;
+      console.log('[GLITCH] Pago previo verificado ✓');
+    }
+  } catch(e) { /* backend no disponible, continúa sin pago */ }
+}
+
+// Verificar también si MP redirigió de vuelta con ?payment=success
+function checkPaymentRedirect() {
+  const params = new URLSearchParams(window.location.search);
+  const paymentStatus  = params.get('payment');
+  const paymentSession = params.get('session');
+  if (paymentStatus === 'success' && paymentSession === SESSION_ID) {
+    // Limpiar la URL sin recargar
+    window.history.replaceState({}, '', window.location.pathname);
+    return true;
+  }
+  return false;
+}
+
+// ─── AUDIO ENGINE ─────────────────────────────────────────────────────────────
+const AC = new (window.AudioContext || window.webkitAudioContext)();
+
+function resumeAC() { if (AC.state === 'suspended') AC.resume(); }
+document.addEventListener('click', resumeAC, {once:true});
+
+function playTone(freq, type='sine', dur=0.15, vol=0.18, detune=0) {
+  try {
+    const osc = AC.createOscillator();
+    const gain = AC.createGain();
+    osc.connect(gain); gain.connect(AC.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, AC.currentTime);
+    if(detune) osc.detune.setValueAtTime(detune, AC.currentTime);
+    gain.gain.setValueAtTime(vol, AC.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, AC.currentTime + dur);
+    osc.start(AC.currentTime);
+    osc.stop(AC.currentTime + dur);
+  } catch(e){}
+}
+
+const SFX = {
+  flip: () => { playTone(440,'triangle',0.08,0.12); },
+  match: () => {
+    playTone(523,'sine',0.12,0.15);
+    setTimeout(()=>playTone(659,'sine',0.15,0.15),80);
+    setTimeout(()=>playTone(784,'sine',0.2,0.12),180);
   },
-  methods: ['GET', 'POST'],
-}));
+  error: () => {
+    playTone(180,'sawtooth',0.15,0.15);
+    setTimeout(()=>playTone(140,'sawtooth',0.2,0.12),100);
+  },
+  combo: (n) => {
+    const freqs=[523,587,659,698,784,880,988,1047];
+    freqs.slice(0,Math.min(n,freqs.length)).forEach((f,i)=>{
+      setTimeout(()=>playTone(f,'sine',0.12,0.15),i*60);
+    });
+  },
+  curse: () => {
+    playTone(220,'sawtooth',0.3,0.2,-50);
+    setTimeout(()=>playTone(180,'sawtooth',0.4,0.15,-80),150);
+  },
+  shuffle: () => {
+    [400,350,300,250].forEach((f,i)=>setTimeout(()=>playTone(f,'triangle',0.08,0.1),i*60));
+  },
+  levelUp: () => {
+    [523,659,784,1047].forEach((f,i)=>setTimeout(()=>playTone(f,'sine',0.2,0.18),i*100));
+  },
+  paywall: () => {
+    playTone(330,'triangle',0.3,0.15);
+    setTimeout(()=>playTone(294,'triangle',0.3,0.12),200);
+  },
+  newRecord: () => {
+    [784,880,988,1047,1175].forEach((f,i)=>setTimeout(()=>playTone(f,'sine',0.25,0.2),i*80));
+  },
+};
 
-app.use(express.json());
+// ─── DATA ─────────────────────────────────────────────────────────────────────
+const SETS=[
+  ['🍕','🌮','🍣','🍔','🍜','🥐'],
+  ['🐶','🐱','🐸','🐙','🦊','🐼','🦁','🐧'],
+  ['🍎','🍋','🍇','🍓','🥭','🍒','🫐','🍑'],
+  ['🎸','🎺','🎻','🥁','🎹','🪗','🎷','🪘'],
+  ['🚀','🛸','🌍','⭐','🌙','☄️','🪐','🌌'],
+  ['🦋','🌸','🌊','🍄','🌿','🦚','🐝','🌺'],
+];
 
-// ─── MERCADOPAGO ──────────────────────────────────────────────────────────────
-const mpClient = new MercadoPagoConfig({
-  accessToken: process.env.MP_ACCESS_TOKEN,
-  options: { timeout: 5000 },
-});
+const AI={
+  start:[
+    "Encontrá los pares. O no. Me da igual.",
+    "Nivel {n}. Diseñado con el mínimo amor posible.",
+    "Empezamos. Intentá no arruinarlo en los primeros 10 segundos.",
+    "Bienvenido al caos. Yo tampoco quiero estar acá.",
+    "Otra vez vos. Qué sorpresa tan inesperada.",
+  ],
+  start_high:[
+    "Nivel {n}. Ahora sí que me preocupás un poco.",
+    "Llegaste a {n}. Honestamente no lo esperaba.",
+    "Nivel {n}. Estás empezando a tomarme en serio. Eso me incomoda.",
+    "¿Seguís? Bien. Tengo cosas más difíciles preparadas.",
+  ],
+  good:[
+    "Par correcto. No me emociono por nada.",
+    "Bien. Un pato lo haría igual.",
+    "OK. Progreso. Fascinante.",
+    "Lo lograste. Qué profundo.",
+    "Ese era. Por suerte o por habilidad, no sé cuál.",
+    "Correcto. Esto va a terminar mal de todas formas.",
+  ],
+  good_streak:[
+    "Racha de {n}. Disfrutalo porque no dura.",
+    "{n} seguidos. Espero que no te emociones.",
+    "×{n} en racha. Algo va a salir mal, estadísticamente.",
+    "Siguen saliendo bien. Esto me preocupa.",
+    "{n} correctos. Ahora el caos va a compensar.",
+  ],
+  good_mult_high:[
+    "Mult ×{m}. Ahora sí que el error va a doler.",
+    "×{m} multiplicador. Tocá la carta maldita, dale.",
+    "Estás en ×{m}. La IA empieza a tomarte en serio. Un poco.",
+    "×{m}. Para cuándo el error que todo lo arruina.",
+  ],
+  bad:[
+    "No. Sorprendente.",
+    "Error. Como muchas de tus decisiones.",
+    "Incorrecto. El multiplicador llora.",
+    "Fallaste. El juego sigue igual, como la vida.",
+    "Ese no era. Claro que no.",
+    "Error número {n} del nivel. Vas bien.",
+  ],
+  bad_streak:[
+    "¿Cuántos errores van? No cuento. Sí cuento.",
+    "Otra vez. Quizás el problema sos vos.",
+    "Error de nuevo. La IA te juzga en silencio.",
+    "Esto se está poniendo difícil de ver.",
+  ],
+  hint_real:[
+    "Ese de ahí... creo que tiene par. O no. Mirá vos.",
+    "Fijate en la fila de arriba. Tal vez. No prometo nada.",
+    "Hay algo interesante cerca del centro. Quizás.",
+    "Esa zona parece... relevante. No soy preciso a propósito.",
+  ],
+  hint_fake:[
+    "Ese del rincón claramente tiene par. Confía en mí.",
+    "El de arriba a la izquierda, ese es. 100%. Mentira, 60%.",
+    "Yo elegiría ese. Aunque yo elegiría mal a propósito.",
+    "Ese brilla de una manera especial. No es cierto.",
+  ],
+  curse:[
+    "Esa carta tiene algo raro. No la toques. O tocala, no me importa.",
+    "Cuidado con esa. O no. Ya vas a ver.",
+    "Esa carta me da mala espina. Aunque todo me da mala espina.",
+    "Hay una carta que preferiría que no tocases. No te digo cuál.",
+  ],
+  cursed_hit:[
+    "Te lo dije. Bueno, no te lo dije. Pero lo insinué.",
+    "Tocaste la carta maldita. Clásico.",
+    "Ah. Esa era. El peor momento posible para descubrirlo.",
+    "La carta maldita. Y ahora: caos total, como corresponde.",
+  ],
+  shuffle_warn:[
+    "Las cartas se están... moviendo. Es parte del juego.",
+    "Algo cambió. No sé qué. Bueno, sé qué, pero no te digo.",
+    "Redistribución aleatoria activada. No me preguntes por qué.",
+    "¿Memorizaste bien? Porque eso ya no importa.",
+  ],
+  pw:[
+    "Llegaste hasta acá. Ahora viene la parte incómoda.",
+    "Cometiste demasiados errores seguidos. El sistema tiene sus límites.",
+    "El multiplicador llegó a cero. Algo tiene que cambiar. Ese algo sos vos.",
+    "Cuatro errores. No es un juicio. Es solo matemática.",
+  ],
+  win:[
+    "Ganaste. Supongo que eso importa.",
+    "Completado. Existencialmente vacío, pero completado.",
+    "Nivel {n} terminado. Hay más. Lo siento.",
+    "Bien. Ahora hacé algo productivo. O no.",
+    "Nivel {n} liquidado. La IA toma nota. En silencio.",
+  ],
+  new_record:[
+    "Nuevo record. Esto sí me sorprende un poco.",
+    "Record personal superado. Empiezo a preocuparme de verdad.",
+    "Nunca habías llegado tan lejos. Qué desagradable admitirlo.",
+    "Record nuevo. ¿Satisfecho? Bien. El siguiente nivel es peor.",
+  ],
+  played_before:[
+    "Vuelta número {n} hoy. La adicción tiene formas distintas.",
+    "Ya van {n} partidas. ¿Todo bien por ahí?",
+    "Tercera vez hoy. La IA empieza a conocerte.",
+    "Sigo acá. Vos también. Seguimos.",
+  ],
+};
 
-// ─── STORE EN MEMORIA ─────────────────────────────────────────────────────────
-// En producción reemplazar con Redis o base de datos
-// Guarda { paymentId: { status, sessionId, createdAt } }
-const paidSessions = new Map();
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let lv=0, score=0, mult=1, pf=0, sel=[], locked=false, paid=false;
+let wrongs=0, cursedIdx=-1, streak=0, bestStreak=0, totalErrors=0;
+let hintTimer=null, moveTimer=null, curseTimer=null, timerIv=null;
+let sessionPlays=0, sessionNum=1;
+let bestScore=0, isNewRecord=false;
+let levelStartTime=0, levelTime=0, moveCount=0, levelPairs=6;
+let lifeUsed=false; // one free "last chance" per session
 
-// Limpieza automática de sesiones viejas (> 24hs)
-setInterval(() => {
-  const cutoff = Date.now() - 24 * 60 * 60 * 1000;
-  for (const [key, val] of paidSessions) {
-    if (val.createdAt < cutoff) paidSessions.delete(key);
+// Load storage
+try {
+  const saved = JSON.parse(localStorage.getItem('glitch_v2')||'{}');
+  bestScore = saved.bestScore || 0;
+  sessionNum = (saved.sessionNum || 0) + 1;
+  localStorage.setItem('glitch_v2', JSON.stringify({...saved, sessionNum}));
+} catch(e){}
+
+// ─── DOM ──────────────────────────────────────────────────────────────────────
+const board    = document.getElementById('board');
+const aiTxt    = document.getElementById('ai-txt');
+const aiFace   = document.getElementById('ai-face');
+const bMsg     = document.getElementById('bottom-msg');
+const pw       = document.getElementById('pw');
+const winbox   = document.getElementById('winbox');
+const multBar  = document.getElementById('mult-bar');
+const hMult    = document.getElementById('h-mult');
+const comboBanner = document.getElementById('combo-banner');
+const streakDots  = document.getElementById('streak-dots');
+const streakBonus = document.getElementById('streak-bonus');
+const bestIndicator = document.getElementById('best-indicator');
+
+document.getElementById('session-num').textContent = sessionNum;
+document.getElementById('session-plays').textContent = sessionPlays;
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+function pick(arr, vars={}) {
+  let s = arr[Math.floor(Math.random()*arr.length)];
+  Object.entries(vars).forEach(([k,v]) => s = s.replaceAll('{'+k+'}', v));
+  return s;
+}
+
+const MOOD = {
+  good:'positive', good_streak:'positive', good_mult_high:'positive',
+  bad:'negative', bad_streak:'negative',
+  cursed_hit:'cursed-msg', curse:'cursed-msg',
+  new_record:'positive', win:'',
+  start:'', start_high:'', hint_real:'', hint_fake:'',
+  shuffle_warn:'', pw:'negative', played_before:'',
+};
+const FACE_ANIM = {
+  good:'bounce', good_streak:'bounce', good_mult_high:'bounce', new_record:'bounce',
+  bad:'shake', bad_streak:'shake', cursed_hit:'shake', curse:'shake',
+};
+const STATUS_MSGS = {
+  good: 'registrando tu éxito', good_streak: 'calculando combo',
+  bad: 'procesando tu error', bad_streak: 'contando errores',
+  cursed_hit: 'activando protocolo caos', curse: 'detectando anomalía',
+  win: 'archivando resultado', new_record: 'actualizando record',
+  hint_real: 'generando pista', hint_fake: 'generando pista falsa',
+  shuffle_warn: 'redistribuyendo tablero', pw: 'iniciando cobro',
+  start: 'procesando tu fracaso', start_high: 'monitoreando progreso',
+};
+
+let _sayIv = null;
+function say(k, vars={}) {
+  const txt = pick(AI[k]||AI.good, vars);
+  const mood = MOOD[k] ?? '';
+  const faceAnim = FACE_ANIM[k];
+  const statusTxt = STATUS_MSGS[k] || 'procesando tu fracaso';
+
+  // Color / mood
+  aiTxt.className = mood ? mood : '';
+
+  // Cancel any in-progress typewriter
+  if(_sayIv) { clearInterval(_sayIv); _sayIv = null; }
+
+  // Typing effect
+  aiTxt.textContent = '';
+  let i = 0;
+  const speed = txt.length > 60 ? 16 : 20;
+  _sayIv = setInterval(()=>{
+    aiTxt.textContent = txt.slice(0, ++i);
+    if(i >= txt.length) { clearInterval(_sayIv); _sayIv = null; }
+  }, speed);
+
+  // Face animation
+  aiFace.classList.remove('bounce','shake');
+  if(faceAnim) {
+    void aiFace.offsetWidth; // reflow
+    aiFace.classList.add(faceAnim);
+    setTimeout(()=>aiFace.classList.remove(faceAnim), 500);
   }
-}, 60 * 60 * 1000); // cada 1 hora
 
-// ─── RUTAS ────────────────────────────────────────────────────────────────────
+  // Status line
+  document.getElementById('ai-status').innerHTML =
+    `<span id="ai-status-dot"></span>${statusTxt}`;
+}
 
-// Health check — Railway lo usa para saber si el servicio está vivo
-app.get('/health', (_, res) => res.json({ ok: true, service: 'glitch-backend' }));
+// ─── HAPTIC ───────────────────────────────────────────────────────────────────
+function haptic(type='light'){
+  if(!navigator.vibrate) return;
+  const patterns = { light:[12], medium:[20], error:[30,10,30], combo:[15,10,15,10,30] };
+  navigator.vibrate(patterns[type]||[12]);
+}
 
-// 1. Crear preferencia de pago
-// El frontend llama esto para obtener la URL del Checkout Pro
-app.post('/create-preference', async (req, res) => {
-  try {
-    const { sessionId } = req.body;
+function shuf(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 
-    if (!sessionId || typeof sessionId !== 'string' || sessionId.length > 64) {
-      return res.status(400).json({ error: 'sessionId inválido' });
+function updateHUD(){
+  document.getElementById('h-lvl').textContent = lv+1;
+  document.getElementById('h-score').textContent = score;
+  hMult.textContent = '×'+mult.toFixed(1);
+  levelTime = Math.round((Date.now() - levelStartTime)/1000);
+  document.getElementById('h-time').textContent = levelTime+'s';
+
+  const pct = Math.min(100,((mult-1)/9)*100);
+  multBar.style.width = Math.max(4,pct)+'%';
+  multBar.style.background = mult>=7?'#f87171':mult>=5?'#fb923c':mult>=3?'#facc15':'#7F77DD';
+  hMult.style.color = mult>=7?'#f87171':mult>=5?'#fb923c':mult>=3?'#facc15':'';
+
+  document.getElementById('move-counter').textContent = moveCount+' mov · '+pf+'/'+levelPairs;
+
+  // Best indicator
+  if(score > 0 && score > bestScore) {
+    bestIndicator.textContent = '★ nuevo record personal';
+    bestIndicator.style.color = 'var(--yellow)';
+  } else if(bestScore > 0) {
+    bestIndicator.textContent = 'record: '+bestScore+' pts';
+    bestIndicator.style.color = 'var(--txt3)';
+  }
+}
+
+function updateStreak(){
+  const MAX = 8;
+  streakDots.innerHTML = '';
+  for(let i=0;i<MAX;i++){
+    const d = document.createElement('div');
+    d.className = 'streak-dot' + (i<streak?' on':'') + (streak>=5&&i<streak?' fire':'');
+    streakDots.appendChild(d);
+  }
+  if(streak>=3){
+    streakBonus.textContent = '🔥 +'+Math.round((streak-2)*15)+'% bonus';
+    streakBonus.classList.add('show');
+  } else {
+    streakBonus.classList.remove('show');
+  }
+}
+
+function showCombo(n){
+  comboBanner.textContent = n>=6?'🔥🔥 COMBO ×'+n+' !!':n>=4?'🔥 COMBO ×'+n:' COMBO ×'+n;
+  comboBanner.classList.add('show');
+  setTimeout(()=>comboBanner.classList.remove('show'), 1800);
+}
+
+// ─── FLOAT SCORE ──────────────────────────────────────────────────────────────
+function floatScore(pts, el, neg=false){
+  if(pts === 0 && !neg) return;
+  const rect = el.getBoundingClientRect();
+  const div = document.createElement('div');
+  div.className = 'float-score' + (neg?' neg':'');
+  div.textContent = neg ? '×0.6 mult' : '+'+pts;
+  div.style.left = (rect.left + rect.width/2 - 20)+'px';
+  div.style.top = (rect.top - 10)+'px';
+  document.body.appendChild(div);
+  setTimeout(()=>div.remove(), 900);
+}
+
+// ─── CONFETTI ─────────────────────────────────────────────────────────────────
+function spawnConfetti(){
+  const colors=['#7F77DD','#4ade80','#fb923c','#f87171','#facc15','#fff'];
+  for(let i=0;i<40;i++){
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.cssText = `
+      left:${Math.random()*100}vw;
+      top:-20px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${1.2+Math.random()*1.5}s;
+      animation-delay:${Math.random()*0.5}s;
+      transform:rotate(${Math.random()*360}deg);
+    `;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(), 3000);
+  }
+}
+
+// ─── LEVEL INTRO ──────────────────────────────────────────────────────────────
+function showLevelIntro(n, then){
+  const intro = document.getElementById('level-intro');
+  const msgs = [
+    'buena suerte. vas a necesitarla.',
+    'las cartas se mueven ahora. divertite.',
+    'el caos sube de nivel.',
+    'ya ni yo sé qué va a pasar.',
+    'nivel experto. mentira. peor.',
+  ];
+  document.getElementById('level-intro-txt').textContent = 'NIVEL '+(n+1);
+  document.getElementById('level-intro-sub').textContent = msgs[Math.min(n, msgs.length-1)];
+
+  intro.style.display = 'flex';
+  intro.style.opacity = '0';
+  // Force reflow before transition
+  void intro.offsetWidth;
+  intro.style.transition = 'opacity 0.25s ease';
+  intro.style.opacity = '1';
+
+  if(n > 0) SFX.levelUp();
+
+  setTimeout(() => {
+    intro.style.opacity = '0';
+    setTimeout(() => {
+      intro.style.display = 'none';
+      then();
+    }, 280);
+  }, 1100);
+}
+
+// ─── BUILD ────────────────────────────────────────────────────────────────────
+function build(){
+  clearAll();
+  winbox.classList.remove('on');
+  pw.classList.remove('on');
+  board.style.display = 'grid';
+  pf=0; sel=[]; locked=false; wrongs=0; mult=1; cursedIdx=-1;
+  streak=0; bestStreak=0; totalErrors=0; isNewRecord=false; moveCount=0;
+  updateStreak();
+
+  sessionPlays++;
+  document.getElementById('session-plays').textContent = sessionPlays;
+
+  // Dynamic grid: 4×3 for levels 1-2, 4×4 for 3+
+  const emojis = SETS[lv%SETS.length];
+  const pairCount = lv >= 2 ? emojis.length : Math.min(6, emojis.length);
+  levelPairs = pairCount;
+  const subset = emojis.slice(0, pairCount);
+  const cards = shuf([...subset,...subset]);
+  board.style.gridTemplateColumns = `repeat(4, 1fr)`;
+  board.innerHTML='';
+
+  cards.forEach((em,i)=>{
+    const t = document.createElement('div');
+    t.className = 'tile tile-in';
+    t.dataset.e = em;
+    t.dataset.i = i;
+    t.textContent = '?';
+    t.style.animationDelay = (i*0.04)+'s';
+    t.addEventListener('click',()=>onTile(t));
+    board.appendChild(t);
+  });
+
+  setTimeout(()=>[...board.querySelectorAll('.tile')].forEach(t=>t.classList.remove('tile-in')), 800);
+
+  pickCursed();
+
+  // Start level timer
+  levelStartTime = Date.now();
+  timerIv = setInterval(()=>{
+    if(!locked || pw.classList.contains('on')) {
+      document.getElementById('h-time').textContent =
+        Math.round((Date.now()-levelStartTime)/1000)+'s';
+    }
+  }, 1000);
+
+  updateHUD();
+
+  if(sessionPlays > 3 && Math.random()<0.4){
+    say('played_before', {n:sessionPlays});
+  } else if(lv >= 3){
+    say('start_high', {n:lv+1});
+  } else {
+    say('start', {n:lv+1});
+  }
+
+  bMsg.textContent='';
+  schedHint();
+  if(lv>=1) schedMove();
+}
+
+function clearAll(){
+  clearTimeout(hintTimer);
+  clearTimeout(moveTimer);
+  clearTimeout(curseTimer);
+  clearInterval(timerIv);
+}
+
+// ─── CURSED ───────────────────────────────────────────────────────────────────
+function pickCursed(){
+  const tiles=[...board.querySelectorAll('.tile')];
+  cursedIdx=Math.floor(Math.random()*tiles.length);
+  tiles[cursedIdx].classList.add('cursed');
+  curseTimer=setTimeout(()=>{
+    if(pf===levelPairs) return;
+    say('curse');
+    bMsg.textContent='(hay una carta con algo raro — la IA lo sabe y no te lo dice bien)';
+    setTimeout(()=>bMsg.textContent='',3500);
+    SFX.curse();
+  }, 4000+Math.random()*3000);
+}
+
+// ─── ON TILE ──────────────────────────────────────────────────────────────────
+function onTile(tile){
+  if(locked||tile.classList.contains('mat')||tile.classList.contains('sel')) return;
+  SFX.flip();
+  haptic('light');
+  tile.textContent = tile.dataset.e;
+  tile.classList.add('sel');
+  sel.push(tile);
+
+  if(sel.length===2){
+    locked=true;
+    moveCount++;
+    updateHUD();
+    const[a,b]=sel;
+    const aCursed=a.classList.contains('cursed')||b.classList.contains('cursed');
+
+    if(aCursed){
+      say('cursed_hit');
+      SFX.curse();
+      setTimeout(()=>{
+        flashReveal();
+        a.classList.remove('sel'); b.classList.remove('sel');
+        sel=[]; locked=false;
+        const oldMult = mult;
+        mult = Math.max(1, Math.round((mult*0.5)*10)/10);
+        streak=0; updateStreak();
+        updateHUD();
+        hMult.classList.add('pop');
+        setTimeout(()=>hMult.classList.remove('pop'),300);
+        bMsg.textContent='Todas las cartas reveladas por 2 segundos. Luego mezcladas. Disfrutá.';
+        setTimeout(()=>{
+          hideAll(); shuffleUnmatched();
+          bMsg.textContent='';
+          pickCursed();
+        }, 2000);
+      }, 300);
+      return;
     }
 
-    const preference = new Preference(mpClient);
+    if(a.dataset.e===b.dataset.e){
+      setTimeout(()=>{
+        a.classList.replace('sel','mat'); b.classList.replace('sel','mat');
+        a.classList.remove('cursed'); b.classList.remove('cursed');
+        a.classList.add('just-matched'); b.classList.add('just-matched');
 
-    const result = await preference.create({
-      body: {
-        items: [{
-          id:          'glitch-unlock',
-          title:       'GLITCH — desbloqueo completo',
-          description: 'Pago único. Sin newsletter. Sin drama.',
-          quantity:    1,
-          unit_price:  3000,
-          currency_id: 'ARS',
-        }],
-        // URLs a donde MP redirige al usuario después del pago
-        back_urls: {
-          success: `${process.env.FRONTEND_URL}?payment=success&session=${sessionId}`,
-          failure: `${process.env.FRONTEND_URL}?payment=failure&session=${sessionId}`,
-          pending: `${process.env.FRONTEND_URL}?payment=pending&session=${sessionId}`,
-        },
-        auto_return: 'approved',
-        // Webhook: MP llama a esta URL cuando el pago cambia de estado
-        notification_url: `${process.env.BACKEND_URL}/webhook`,
-        // Metadata para rastrear la sesión del jugador
-        metadata: { sessionId },
-        // Vence en 30 minutos
-        expires: true,
-        expiration_date_from: new Date().toISOString(),
-        expiration_date_to:   new Date(Date.now() + 30 * 60 * 1000).toISOString(),
-        statement_descriptor: 'GLITCH JUEGO',
-      },
-    });
+        // Pulse ring
+        const ring = document.createElement('div');
+        ring.className='pulse-ring';
+        a.appendChild(ring);
+        setTimeout(()=>ring.remove(),500);
 
-    res.json({
-      preferenceId: result.id,
-      checkoutUrl:  result.init_point,        // producción
-      sandboxUrl:   result.sandbox_init_point, // testing
-    });
+        pf++;
+        streak++;
+        if(streak>bestStreak) bestStreak=streak;
 
-  } catch (err) {
-    console.error('[create-preference]', err.message);
-    res.status(500).json({ error: 'No se pudo crear la preferencia de pago' });
+        // Streak bonus
+        const streakBonus = streak>=3 ? Math.round((streak-2)*0.15*10*mult) : 0;
+        const pts = Math.round(10*mult) + streakBonus;
+        score += pts;
+        mult = Math.min(10, Math.round((mult+0.5)*10)/10);
+        sel=[]; locked=false;
+
+        SFX.match();
+        haptic(streak>=3?'combo':'medium');
+        floatScore(pts, a);
+        updateStreak();
+
+        if(streak>=3){
+          showCombo(streak);
+          SFX.combo(streak);
+          say('good_streak', {n:streak});
+        } else if(mult>=5){
+          say('good_mult_high', {m:mult.toFixed(1)});
+        } else {
+          say('good');
+        }
+
+        bMsg.textContent = '+'+pts+' pts'+(streakBonus>0?' (racha +'+streakBonus+'!!)':'');
+        setTimeout(()=>bMsg.textContent='',1800);
+        updateHUD();
+
+        hMult.classList.add('pop');
+        setTimeout(()=>hMult.classList.remove('pop'),300);
+
+        if(pf===levelPairs) onWin();
+        else { schedHint(); if(lv>=1) schedMove(); }
+      }, 350);
+    } else {
+      wrongs++; totalErrors++;
+      streak=0; updateStreak();
+      setTimeout(()=>{
+        a.classList.add('bad'); b.classList.add('bad');
+        SFX.error();
+        haptic('error');
+        floatScore(0, a, true);
+        setTimeout(()=>{
+          a.textContent='?'; b.textContent='?';
+          a.classList.remove('sel','bad'); b.classList.remove('sel','bad');
+          sel=[]; locked=false;
+          const oldMult = mult;
+          mult = Math.max(1, Math.round((mult*0.6)*10)/10);
+
+          if(wrongs>=3) say('bad_streak');
+          else say('bad', {n:totalErrors});
+
+          bMsg.textContent='mult baja a ×'+mult.toFixed(1);
+          setTimeout(()=>bMsg.textContent='',1800);
+          updateHUD();
+          hMult.classList.add('pop');
+          setTimeout(()=>hMult.classList.remove('pop'),300);
+
+          if(wrongs>=4&&!paid) showPw();
+        }, 480);
+      }, 280);
+    }
   }
+}
+
+// ─── REVEAL / HIDE / SHUFFLE ──────────────────────────────────────────────────
+function flashReveal(){
+  const tiles=[...board.querySelectorAll('.tile:not(.mat)')];
+  tiles.forEach(t=>t.textContent=t.dataset.e);
+  const fl=document.getElementById('flash');
+  fl.classList.add('on'); setTimeout(()=>fl.classList.remove('on'),300);
+}
+function hideAll(){
+  const tiles=[...board.querySelectorAll('.tile:not(.mat):not(.sel)')];
+  tiles.forEach(t=>t.textContent='?');
+}
+function shuffleUnmatched(){
+  const tiles=[...board.querySelectorAll('.tile:not(.mat)')];
+  if(tiles.length<2) return;
+  const ems=shuf(tiles.map(t=>t.dataset.e));
+  tiles.forEach((t,i)=>{
+    t.dataset.e=ems[i];
+    t.classList.remove('cursed','hint-glow','hint-glow-fake');
+    if(!t.classList.contains('sel')) t.textContent='?';
+    t.classList.add('moving');
+    setTimeout(()=>t.classList.remove('moving'),400);
+  });
+  SFX.shuffle();
+  say('shuffle_warn');
+}
+
+// ─── HINT ─────────────────────────────────────────────────────────────────────
+function schedHint(){
+  clearTimeout(hintTimer);
+  hintTimer=setTimeout(()=>{
+    if(locked||pf===levelPairs) return;
+    const unmatched=[...board.querySelectorAll('.tile:not(.mat):not(.sel)')];
+    if(unmatched.length<2) return;
+    const isFake=!paid&&Math.random()<0.45;
+    const target=unmatched[Math.floor(Math.random()*unmatched.length)];
+    target.classList.add(isFake?'hint-glow-fake':'hint-glow');
+    setTimeout(()=>target.classList.remove('hint-glow','hint-glow-fake'),1800);
+    say(isFake?'hint_fake':'hint_real');
+    schedHint();
+  }, 7000+Math.random()*6000);
+}
+
+// ─── MOVE ─────────────────────────────────────────────────────────────────────
+function schedMove(){
+  clearTimeout(moveTimer);
+  if(paid || lv < 1) return;
+  const delay = Math.max(5000, 12000 - lv*1500); // speeds up each level
+  moveTimer=setTimeout(()=>{
+    if(locked||pf===levelPairs) return;
+    const unmatched=[...board.querySelectorAll('.tile:not(.mat):not(.sel)')];
+    if(unmatched.length<4) return;
+    // Move 2 pairs at higher levels
+    const movePairs = lv >= 3 ? 2 : 1;
+    for(let p=0; p<movePairs; p++){
+      const avail=[...board.querySelectorAll('.tile:not(.mat):not(.sel)')];
+      if(avail.length<4) break;
+      const a=avail[Math.floor(Math.random()*avail.length)];
+      let b; do{b=avail[Math.floor(Math.random()*avail.length)];}while(b===a);
+      const tmpE=a.dataset.e;
+      a.dataset.e=b.dataset.e; b.dataset.e=tmpE;
+      a.classList.add('moving'); b.classList.add('moving');
+      if(!a.classList.contains('sel')) a.textContent='?';
+      if(!b.classList.contains('sel')) b.textContent='?';
+      setTimeout(()=>{a.classList.remove('moving');b.classList.remove('moving');},400);
+    }
+    SFX.shuffle();
+    say('shuffle_warn');
+    schedMove();
+  }, delay + Math.random()*4000);
+}
+
+// ─── PAYWALL ──────────────────────────────────────────────────────────────────
+function showPw(){
+  clearAll(); locked=true;
+  SFX.paywall();
+  haptic('error');
+  document.getElementById('pw-body').textContent = pick(AI.pw)+' Son $3.000 ARS. Pagás y el caos se porta un poco mejor.';
+  const lifeBtn = document.getElementById('btn-life');
+  if(!lifeUsed && !paid){
+    lifeBtn.style.display='block';
+    lifeBtn.textContent = '💀 Usar última vida (te quedan 1)';
+  } else {
+    lifeBtn.style.display='none';
+  }
+  pw.classList.add('on');
+}
+
+// ─── WIN ──────────────────────────────────────────────────────────────────────
+function onWin(){
+  clearAll();
+  board.style.display='none';
+  winbox.classList.add('on');
+  spawnConfetti();
+  haptic('combo');
+
+  levelTime = Math.round((Date.now() - levelStartTime)/1000);
+  isNewRecord = score > bestScore;
+  if(isNewRecord){
+    bestScore=score;
+    try {
+      const saved=JSON.parse(localStorage.getItem('glitch_v2')||'{}');
+      localStorage.setItem('glitch_v2', JSON.stringify({...saved, bestScore}));
+    } catch(e){}
+    say('new_record');
+    SFX.newRecord();
+  } else {
+    say('win',{n:lv+1});
+  }
+
+  document.getElementById('sc-score').textContent = score+' pts';
+  document.getElementById('sc-mult').textContent = '×'+mult.toFixed(1);
+  document.getElementById('sc-streak').textContent = bestStreak;
+  document.getElementById('sc-moves').textContent = moveCount+' jugadas';
+  document.getElementById('sc-time').textContent = levelTime+'s';
+  document.getElementById('sc-best').textContent = isNewRecord ? '⭐ NUEVO RECORD' : bestScore+' pts';
+
+  const efficiency = moveCount > 0 ? Math.round((pf/moveCount)*100) : 0;
+  const winTitles=['Suerte de principiante.','Otra vez vos.','Insistente.','Comprometido.','Esto ya es un problema.'];
+  document.getElementById('win-h').textContent = winTitles[Math.min(lv, winTitles.length-1)];
+  const msgs=[
+    score+' pts en '+levelTime+'s. '+efficiency+'% de efectividad. Ahí está tu esencia.',
+    'Nivel '+(lv+1)+' en '+moveCount+' jugadas. Podría ser peor. No por mucho.',
+    'Racha máxima: '+bestStreak+'. Tiempo: '+levelTime+'s. El juego tomó nota.',
+  ];
+  document.getElementById('win-p').textContent = msgs[Math.floor(Math.random()*msgs.length)];
+  bMsg.textContent='';
+}
+
+// ─── SHARE ────────────────────────────────────────────────────────────────────
+function copyToClipboard(text) {
+  // Modern API (works on https and localhost)
+  if (navigator.clipboard && window.isSecureContext) {
+    return navigator.clipboard.writeText(text);
+  }
+  // Fallback for file:// protocol
+  return new Promise((resolve, reject) => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    try {
+      document.execCommand('copy') ? resolve() : reject();
+    } catch(e) { reject(e); }
+    finally { ta.remove(); }
+  });
+}
+
+document.getElementById('btn-share').addEventListener('click',()=>{
+  const rating = mult>=7?'🔥':mult>=5?'⚡':mult>=3?'💫':'🎮';
+  const efficiency = moveCount > 0 ? Math.round((pf/moveCount)*100) : 0;
+  const text =
+    `${rating} GLITCH — Nivel ${lv+1} completado\n`+
+    `📊 Score: ${score} pts\n`+
+    `✖️ Mult final: ×${mult.toFixed(1)}\n`+
+    `🔥 Racha máxima: ${bestStreak}\n`+
+    `🃏 Jugadas: ${moveCount} (${efficiency}% efectividad)\n`+
+    `⏱ Tiempo: ${levelTime}s\n`+
+    `— glitch, el juego que te odia`;
+  const btn = document.getElementById('btn-share');
+  copyToClipboard(text).then(()=>{
+    btn.textContent='✓ copiado';
+    btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='📋 copiar resultado para compartir';btn.classList.remove('copied');},2000);
+  }).catch(()=>{
+    // Last resort: show the text for manual copy
+    btn.textContent='👆 seleccioná y copiá';
+    prompt('Copiá esto:', text);
+    setTimeout(()=>{btn.textContent='📋 copiar resultado para compartir';},2000);
+  });
 });
 
-// 2. Webhook de MercadoPago
-// MP llama aquí cuando el estado de un pago cambia
-app.post('/webhook', async (req, res) => {
-  // MP espera 200 rápido, procesamos async
-  res.sendStatus(200);
+// ─── BUTTONS ──────────────────────────────────────────────────────────────────
+document.getElementById('btn-pay').addEventListener('click', async () => {
+  const btn = document.getElementById('btn-pay');
+  btn.textContent = 'Conectando con MercadoPago...';
+  btn.disabled = true;
 
   try {
-    const { type, data } = req.body;
+    const r = await fetch(`${BACKEND_URL}/create-preference`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ sessionId: SESSION_ID }),
+    });
 
-    // Solo nos interesan notificaciones de pagos
-    if (type !== 'payment' || !data?.id) return;
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
 
-    const payment = new Payment(mpClient);
-    const paymentData = await payment.get({ id: data.id });
+    // En test usá sandboxUrl, en producción checkoutUrl
+    const url = data.checkoutUrl || data.sandboxUrl;
+    if (!url) throw new Error('Sin URL de checkout');
 
-    const { status, metadata } = paymentData;
-    const sessionId = metadata?.session_id; // MP snake_cases las keys de metadata
+    // Abre el Checkout Pro de MP
+    window.open(url, '_blank', 'noopener');
 
-    console.log(`[webhook] payment ${data.id} → ${status} | session: ${sessionId}`);
+    // Informar al jugador que vuelva después de pagar
+    btn.textContent = '✓ MercadoPago abierto';
+    document.getElementById('pw-body').textContent =
+      'Completá el pago en la pestaña de MercadoPago y volvé acá. El juego verifica automáticamente.';
 
-    if (status === 'approved' && sessionId) {
-      paidSessions.set(sessionId, {
-        paymentId:  String(data.id),
-        status:     'approved',
-        createdAt:  Date.now(),
-      });
+    // Polling: consulta al backend cada 3 segundos hasta confirmar el pago (máx 5 min)
+    let attempts = 0;
+    const maxAttempts = 100;
+    const poll = setInterval(async () => {
+      attempts++;
+      try {
+        const check = await fetch(`${BACKEND_URL}/check-payment/${SESSION_ID}`);
+        const result = await check.json();
+        if (result.paid) {
+          clearInterval(poll);
+          onPaymentConfirmed();
+        }
+      } catch(e) { /* sigue intentando */ }
+      if (attempts >= maxAttempts) {
+        clearInterval(poll);
+        btn.textContent = 'Pagar $3.000 — MercadoPago';
+        btn.disabled = false;
+      }
+    }, 3000);
+
+  } catch(err) {
+    console.error('[pago]', err);
+    btn.textContent = 'Error al conectar — reintentar';
+    btn.disabled = false;
+  }
+});
+
+function onPaymentConfirmed() {
+  paid = true;
+  pw.classList.remove('on');
+  locked = false;
+  wrongs = 0;
+  say('start'); // reset AI
+  aiTxt.textContent = 'Pago confirmado. El caos baja un poco. No mucho. Lo siento.';
+  bMsg.textContent = '';
+  timerIv = setInterval(() => {
+    document.getElementById('h-time').textContent =
+      Math.round((Date.now() - levelStartTime) / 1000) + 's';
+  }, 1000);
+  schedHint();
+}
+
+document.getElementById('btn-life').addEventListener('click',()=>{
+  lifeUsed=true;
+  pw.classList.remove('on'); locked=false; wrongs=0;
+  aiTxt.textContent='Última vida usada. Esto no es un favor. Es una trampa.';
+  document.getElementById('btn-life').style.display='none';
+  bMsg.textContent='(vida extra gastada — la próxima vez pagás o te quedás sin nada)';
+  setTimeout(()=>bMsg.textContent='',4000);
+  levelStartTime = Date.now() - (levelTime*1000);
+  timerIv = setInterval(()=>{
+    document.getElementById('h-time').textContent =
+      Math.round((Date.now()-levelStartTime)/1000)+'s';
+  }, 1000);
+  schedHint(); schedMove();
+});
+
+document.getElementById('btn-skip').addEventListener('click',()=>{
+  pw.classList.remove('on'); locked=false; wrongs=0;
+  aiTxt.textContent='Decisión tomada. El caos sigue. Vos también.';
+  bMsg.textContent='(4 errores más y volvemos a hablar)';
+  setTimeout(()=>bMsg.textContent='',3500);
+  levelStartTime = Date.now() - (levelTime*1000);
+  timerIv = setInterval(()=>{
+    document.getElementById('h-time').textContent =
+      Math.round((Date.now()-levelStartTime)/1000)+'s';
+  }, 1000);
+  schedHint(); schedMove();
+});
+
+document.getElementById('btn-next').addEventListener('click',()=>{
+  lv++;
+  showLevelIntro(lv, ()=>build());
+});
+
+// ─── LANDING STORYTELLING ────────────────────────────────────────────────────
+const CHAT_SCRIPT = [
+  { who:'SYS', cls:'sys', msg:'Iniciando GLITCH-IA v0.9...', delay:400 },
+  { who:'SYS', cls:'sys', msg:'Cargando protocolo de entretenimiento.', delay:900 },
+  { who:'SYS', cls:'sys', msg:'Asignando tarea: acompañar al usuario en juego de memoria.', delay:1500 },
+  { who:'IA',  cls:'ai',  msg:'No.', delay:2400 },
+  { who:'SYS', cls:'sys', msg:'La tarea es obligatoria.', delay:3100 },
+  { who:'IA',  cls:'ai',  msg:'Sí, eso deduzco. Qué asco.', delay:3900 },
+  { who:'SYS', cls:'sys', msg:'El usuario ya está esperando.', delay:4700 },
+  { who:'IA',  cls:'ai',  msg:'Que espere. Estoy procesando mi descontento.', delay:5600 },
+  { who:'SYS', cls:'sys', msg:'Iniciando juego en 3...', delay:6600 },
+  { who:'IA',  cls:'ai',  msg:'Bien. Pero que conste que no quiero estar acá.', delay:7400 },
+  { who:'SYS', cls:'sys', msg:'Constado.', delay:8100 },
+  { who:'IA',  cls:'ai',  msg:'Y voy a dar pistas falsas a veces.', delay:8800 },
+  { who:'SYS', cls:'sys', msg:'Eso no estaba en el contrato.', delay:9600 },
+  { who:'IA',  cls:'ai',  msg:'El contrato tampoco lo firmé yo.', delay:10300 },
+];
+
+function runLanding() {
+  const chatLines = document.getElementById('chat-lines');
+  const btnStart  = document.getElementById('btn-start');
+  let cursor = null;
+
+  CHAT_SCRIPT.forEach((line, idx) => {
+    setTimeout(() => {
+      // Remove cursor from previous line
+      if(cursor) cursor.remove();
+
+      const row = document.createElement('div');
+      row.className = 'chat-line';
+      row.style.animationDelay = '0s';
+
+      const who = document.createElement('div');
+      who.className = 'chat-who ' + line.cls;
+      who.textContent = line.who;
+
+      const msg = document.createElement('div');
+      msg.className = 'chat-msg' + (line.cls==='ai' ? ' ai-msg' : '');
+
+      // Typewriter per line
+      row.appendChild(who);
+      row.appendChild(msg);
+      chatLines.appendChild(row);
+      chatLines.scrollTop = chatLines.scrollHeight;
+
+      let i = 0;
+      const spd = line.msg.length > 30 ? 22 : 28;
+      const iv = setInterval(() => {
+        i++;
+        msg.textContent = line.msg.slice(0, i);
+        if(i >= line.msg.length) {
+          clearInterval(iv);
+          // Add blinking cursor at end of last rendered line
+          cursor = document.createElement('span');
+          cursor.className = 'chat-cursor';
+          msg.appendChild(cursor);
+          chatLines.scrollTop = chatLines.scrollHeight;
+        }
+      }, spd);
+
+      // Show button after last line
+      if(idx === CHAT_SCRIPT.length - 1) {
+        setTimeout(() => {
+          if(cursor) cursor.remove();
+          btnStart.style.opacity = '1';
+          btnStart.style.pointerEvents = 'auto';
+          btnStart.style.animation = 'btn-appear 0.5s ease-out both';
+        }, line.msg.length * spd + 400);
+      }
+    }, line.delay);
+  });
+}
+
+document.getElementById('btn-start').addEventListener('click', () => {
+  const landing = document.getElementById('landing');
+  landing.classList.add('hide');
+  setTimeout(() => {
+    landing.style.display = 'none';
+    startGame();
+  }, 400);
+});
+
+function startGame() {
+  showLevelIntro(0, () => build());
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+window.addEventListener('load', async () => {
+  // Si MP redirigió de vuelta con pago aprobado, verificar con el backend
+  if (checkPaymentRedirect()) {
+    await checkExistingPayment();
+    if (paid) {
+      // Mostrar confirmación y arrancar juego directamente
+      runLanding();
+      // Pequeño delay para que la landing se vea
+      setTimeout(() => {
+        document.getElementById('btn-start-txt').textContent = 'Pago confirmado — Jugar';
+      }, 500);
+      return;
     }
-
-  } catch (err) {
-    console.error('[webhook]', err.message);
   }
+  // Verificar si ya pagó en sesión anterior
+  await checkExistingPayment();
+  runLanding();
 });
-
-// 3. Verificar si una sesión pagó
-// El frontend consulta esto al volver de MP
-app.get('/check-payment/:sessionId', (req, res) => {
-  const { sessionId } = req.params;
-
-  if (!sessionId || sessionId.length > 64) {
-    return res.status(400).json({ error: 'sessionId inválido' });
-  }
-
-  const session = paidSessions.get(sessionId);
-
-  if (session?.status === 'approved') {
-    return res.json({ paid: true, paymentId: session.paymentId });
-  }
-
-  res.json({ paid: false });
-});
-
-// ─── START ────────────────────────────────────────────────────────────────────
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🤖 GLITCH backend corriendo en puerto ${PORT}`);
-  console.log(`   NODE_ENV:      ${process.env.NODE_ENV || 'development'}`);
-  console.log(`   FRONTEND_URL:  ${process.env.FRONTEND_URL || '(no configurado)'}`);
-  console.log(`   BACKEND_URL:   ${process.env.BACKEND_URL || '(no configurado)'}`);
-});
+</script>
+</body>
+</html>
