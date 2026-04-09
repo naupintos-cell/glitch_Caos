@@ -225,7 +225,8 @@ body {
 }
 
 #ai-bar {
-  margin-bottom: 6px;
+  margin-top: 6px;
+  margin-bottom: 4px;
   padding: 8px 12px;
   background: var(--bg2);
   border: 1px solid rgba(127,119,221,0.15);
@@ -1269,17 +1270,6 @@ body {
     <div id="session-badge">s#<span id="session-num">1</span> · <span id="session-plays">0</span> hoy</div>
   </div>
 
-  <div id="ai-bar">
-    <div id="ai-header">
-      <span id="ai-face">🤖</span>
-      <div>
-        <div id="ai-name">GLITCH-IA v0.9</div>
-        <div id="ai-status"><span id="ai-status-dot"></span>procesando tu fracaso</div>
-      </div>
-    </div>
-    <div id="ai-txt">—</div>
-  </div>
-
   <!-- HUD principal: score y mult grandes -->
   <div id="hud">
     <div class="hud-cell hud-primary">
@@ -1354,6 +1344,18 @@ body {
   </div>
 
   <div id="bottom-msg"></div>
+
+  <!-- IA reacciona justo debajo del tablero -->
+  <div id="ai-bar">
+    <div id="ai-header">
+      <span id="ai-face">🤖</span>
+      <div>
+        <div id="ai-name">GLITCH-IA v0.9</div>
+        <div id="ai-status"><span id="ai-status-dot"></span>procesando tu fracaso</div>
+      </div>
+    </div>
+    <div id="ai-txt">—</div>
+  </div>
 
   <footer id="site-footer">
     <div id="footer-inner">
@@ -2492,6 +2494,8 @@ const CHAT_SCRIPT = [
   { who:'IA',  cls:'ai',  msg:'Y voy a dar pistas falsas a veces.', delay:8800 },
   { who:'SYS', cls:'sys', msg:'Eso no estaba en el contrato.', delay:9600 },
   { who:'IA',  cls:'ai',  msg:'El contrato tampoco lo firmé yo.', delay:10300 },
+  { who:'SYS', cls:'sys', msg:'Mostrando botón de inicio al usuario...', delay:11200 },
+  { who:'IA',  cls:'ai',  msg:'Este paso es completamente innecesario. El juego podría empezar solo. Pero al sistema le gusta que hagas click. Yo también lo encuentro absurdo.', delay:11900 },
 ];
 
 function runLanding() {
