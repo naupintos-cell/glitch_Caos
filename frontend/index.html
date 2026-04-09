@@ -1649,29 +1649,34 @@ const SFX = {
 // Cada nivel tiene nombre, descripción y mecánica nueva que se anuncia
 const LEVEL_CONFIG = [
   {
+    name: 'MODO FÁCIL',
+    desc: '4 pares. sin trampas. aprendé el loop.',
+    pairs: 4, mechanic: null, cursed: false, fakePct: 0, moveSpeed: 0,
+  },
+  {
     name: 'MODO BÁSICO',
-    desc: 'memoria pura. sin trampas. por ahora.',
-    pairs: 6, mechanic: null,
+    desc: 'más pares. la IA empieza a mentir un poco.',
+    pairs: 6, mechanic: null, cursed: false, fakePct: 0.2, moveSpeed: 0,
   },
   {
     name: 'CARTA MALDITA',
-    desc: 'una carta arruina todo. la IA sabe cuál es.',
-    pairs: 6, mechanic: 'cursed',
+    desc: 'una carta arruina todo. la IA sabe cuál es. vos no.',
+    pairs: 6, mechanic: 'cursed', cursed: true, fakePct: 0.3, moveSpeed: 0,
   },
   {
     name: 'TABLERO VIVO',
     desc: 'las cartas se mueven. lo que memorizaste ya no sirve.',
-    pairs: 8, mechanic: 'moving',
+    pairs: 8, mechanic: 'moving', cursed: true, fakePct: 0.4, moveSpeed: 12000,
   },
   {
     name: 'CAOS DOBLE',
     desc: 'más cartas. se mueven más rápido. la IA miente más.',
-    pairs: 8, mechanic: 'chaos',
+    pairs: 8, mechanic: 'chaos', cursed: true, fakePct: 0.45, moveSpeed: 8000,
   },
   {
     name: 'MODO PESADILLA',
     desc: 'todo junto. el caos máximo. buena suerte.',
-    pairs: 8, mechanic: 'nightmare',
+    pairs: 8, mechanic: 'nightmare', cursed: true, fakePct: 0.45, moveSpeed: 5000,
   },
 ];
 
@@ -1686,6 +1691,12 @@ const AI = {
     "Nivel {n}. Diseñado con el mínimo amor posible.",
     "Empezamos. Intentá no arruinarlo en los primeros 10 segundos.",
     "Bienvenido al caos. Yo tampoco quiero estar acá.",
+  ],
+  start_easy:[
+    "4 pares. Sin trampas. Aprendé el mecanismo antes de que empiece el caos real.",
+    "Nivel tutorial. Sí, hay tutorial. No me preguntes por qué, no lo diseñé yo.",
+    "Empezamos fácil. Disfrutalo. No dura.",
+    "4 pares. Sin carta maldita. Sin pistas falsas. Esto no va a durar.",
   ],
   start_high:[
     "Nivel {n}. Ahora sí que me preocupás un poco.",
@@ -1918,7 +1929,7 @@ const MOOD = {
   bad:'negative', bad_streak:'negative', mult_danger:'negative',
   first_error:'negative', frustration:'negative',
   cursed_hit:'cursed-msg', curse:'cursed-msg',
-  win:'', start:'', start_high:'', hint_real:'', hint_fake:'',
+  win:'', start:'', start_easy:'', start_high:'', hint_real:'', hint_fake:'',
   shuffle_warn:'', pw:'negative', played_before:'',
   return_after_loss:'', idle:'', mechanic_cursed:'cursed-msg',
   mechanic_moving:'', mechanic_chaos:'negative', mechanic_nightmare:'negative',
@@ -1940,7 +1951,7 @@ const STATUS_MSGS = {
   win: 'archivando resultado', new_record: 'actualizando record',
   hint_real: 'generando pista', hint_fake: 'generando pista falsa',
   shuffle_warn: 'redistribuyendo tablero', pw: 'iniciando cobro',
-  start: 'procesando tu fracaso', start_high: 'monitoreando progreso',
+  start: 'procesando tu fracaso', start_easy: 'iniciando modo tutorial', start_high: 'monitoreando progreso',
   return_after_loss: 'procesando el regreso',
   return_from_session: 'detectando ausencia prolongada',
   idle: 'esperando acción', played_before: 'detectando hábito',
@@ -2161,7 +2172,7 @@ function build(){
 
   setTimeout(()=>[...board.querySelectorAll('.tile')].forEach(t=>t.classList.remove('tile-in')), 800);
 
-  pickCursed();
+  if(cfg.cursed) pickCursed();
 
   // Start level timer
   levelStartTime = Date.now();
@@ -2176,14 +2187,16 @@ function build(){
 
   // AI greeting — contextual priority order
   if(returnFromLoss && sessionNum > 1 && sessionPlays === 1) {
-    // Primera partida de una nueva sesión después de horas
     say('return_from_session');
     returnFromLoss = false;
   } else if(returnFromLoss) {
     say('return_after_loss');
     returnFromLoss = false;
+  } else if(lv === 0 && sessionPlays === 1) {
+    say('start_easy');
+    bMsg.textContent = 'encontrá los pares. tocá dos cartas. si coinciden, quedan.';
+    setTimeout(()=>bMsg.textContent='', 4000);
   } else if(cfg.mechanic && lv > 0) {
-    // Announce new mechanic on first encounter
     const mechanicKey = 'mechanic_'+cfg.mechanic;
     if(AI[mechanicKey]) say(mechanicKey);
     else say('start_high', {n:lv+1});
@@ -2198,10 +2211,7 @@ function build(){
   bMsg.textContent='';
   resetIdleTimer();
   schedHint();
-  // Moving cards from level 2 (mechanic: moving) onwards
-  if(cfg.mechanic === 'moving' || cfg.mechanic === 'chaos' || cfg.mechanic === 'nightmare') {
-    schedMove();
-  }
+  if(cfg.moveSpeed) schedMove();
 }
 
 function clearAll(){
@@ -2409,7 +2419,9 @@ function schedHint(){
     if(locked||pf===levelPairs) return;
     const unmatched=[...board.querySelectorAll('.tile:not(.mat):not(.sel)')];
     if(unmatched.length<2) return;
-    const isFake=!paid&&Math.random()<0.45;
+    const cfg = getLevelConfig(lv);
+    const fakePct = paid ? 0 : cfg.fakePct;
+    const isFake = Math.random() < fakePct;
     const target=unmatched[Math.floor(Math.random()*unmatched.length)];
     target.classList.add(isFake?'hint-glow-fake':'hint-glow');
     setTimeout(()=>target.classList.remove('hint-glow','hint-glow-fake'),1800);
@@ -2421,14 +2433,13 @@ function schedHint(){
 // ─── MOVE ─────────────────────────────────────────────────────────────────────
 function schedMove(){
   clearTimeout(moveTimer);
-  if(paid || lv < 1) return;
-  const delay = Math.max(5000, 12000 - lv*1500); // speeds up each level
+  const cfg = getLevelConfig(lv);
+  if(paid || !cfg.moveSpeed) return;
   moveTimer=setTimeout(()=>{
     if(locked||pf===levelPairs) return;
     const unmatched=[...board.querySelectorAll('.tile:not(.mat):not(.sel)')];
     if(unmatched.length<4) return;
-    // Move 2 pairs at higher levels
-    const movePairs = lv >= 3 ? 2 : 1;
+    const movePairs = lv >= 4 ? 2 : 1;
     for(let p=0; p<movePairs; p++){
       const avail=[...board.querySelectorAll('.tile:not(.mat):not(.sel)')];
       if(avail.length<4) break;
@@ -2444,7 +2455,7 @@ function schedMove(){
     SFX.shuffle();
     say('shuffle_warn');
     schedMove();
-  }, delay + Math.random()*4000);
+  }, cfg.moveSpeed + Math.random()*3000);
 }
 
 // ─── PAYWALL ──────────────────────────────────────────────────────────────────
