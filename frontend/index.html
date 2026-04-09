@@ -8,6 +8,20 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0a0a0f">
 <title>GLITCH — el juego que te odia</title>
+<meta name="description" content="Un juego de memoria con una IA que odia su trabajo. Encontrá los pares. Ella te va a dificultar todo.">
+
+<!-- Open Graph — para compartir en redes -->
+<meta property="og:title" content="GLITCH — el juego que te odia">
+<meta property="og:description" content="Una IA que no quiere trabajar. Un juego de memoria con caos real. Gratis para probar.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://glitchcaos.netlify.app">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GLITCH — el juego que te odia">
+<meta name="twitter:description" content="Una IA que no quiere trabajar. Un juego de memoria con caos real.">
+
+<!-- Favicon: robot SVG inline, sin archivo externo -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a0a0f'/%3E%3Crect x='8' y='10' width='16' height='14' rx='3' fill='%237F77DD'/%3E%3Crect x='11' y='14' width='3' height='3' rx='1' fill='%230a0a0f'/%3E%3Crect x='18' y='14' width='3' height='3' rx='1' fill='%230a0a0f'/%3E%3Crect x='13' y='19' width='6' height='2' rx='1' fill='%230a0a0f'/%3E%3Crect x='14' y='7' width='4' height='3' rx='1' fill='%237F77DD'/%3E%3Ccircle cx='16' cy='7' r='1.5' fill='%234ade80'/%3E%3Crect x='5' y='13' width='3' height='5' rx='1.5' fill='%237F77DD'/%3E%3Crect x='24' y='13' width='3' height='5' rx='1.5' fill='%237F77DD'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230a0a0f'/%3E%3Crect x='8' y='10' width='16' height='14' rx='3' fill='%237F77DD'/%3E%3Crect x='11' y='14' width='3' height='3' rx='1' fill='%230a0a0f'/%3E%3Crect x='18' y='14' width='3' height='3' rx='1' fill='%230a0a0f'/%3E%3Crect x='13' y='19' width='6' height='2' rx='1' fill='%230a0a0f'/%3E%3Crect x='14' y='7' width='4' height='3' rx='1' fill='%237F77DD'/%3E%3Ccircle cx='16' cy='7' r='1.5' fill='%234ade80'/%3E%3Crect x='5' y='13' width='3' height='5' rx='1.5' fill='%237F77DD'/%3E%3Crect x='24' y='13' width='3' height='5' rx='1.5' fill='%237F77DD'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
@@ -695,6 +709,34 @@ body {
   transition: background 0.15s, transform 0.1s;
   letter-spacing: -0.01em;
 }
+.pw-trust {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--txt3);
+  margin-bottom: 12px;
+  padding: 6px 8px;
+  background: var(--bg3);
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  font-family: var(--mono);
+}
+.pw-trust strong { color: var(--txt2); }
+.pw-made-by {
+  font-size: 10px;
+  color: var(--txt3);
+  margin-bottom: 8px;
+  font-family: var(--mono);
+}
+.pw-made-by a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.pw-made-by a:hover { text-decoration: underline; }
+.pw-btn { margin-bottom: 8px; }
 .pw-btn:hover { background: var(--accent2); transform: translateY(-1px); }
 .pw-btn:active { transform: translateY(0); }
 .pw-skip {
@@ -1284,8 +1326,14 @@ body {
         <p id="pw-body">Esto es un paywall. No hay forma elegante de decirlo. Son $3.000. Menos que un café con medialunas en cualquier lado.</p>
         <div class="pw-price">$3.000 ARS</div>
         <span class="pw-sub">pago único · sin newsletter · sin drama</span>
-        <button class="pw-btn" id="btn-pay">Pagar $3.000 — MercadoPago</button>
+        <div class="pw-trust">
+          <span>🔒 Pago seguro vía</span>
+          <strong>MercadoPago</strong>
+          <span>· No guardamos tu tarjeta</span>
+        </div>
+        <button class="pw-btn" id="btn-pay">Pagar $3.000 — MercadoPago →</button>
         <button class="pw-btn pw-btn-life" id="btn-life" style="background:var(--orange);margin-bottom:8px;display:none">💀 Usar última vida (1 vez gratis)</button>
+        <div class="pw-made-by">Hecho por <a href="https://kairo.com.ar" target="_blank" rel="noopener">KAIRO</a> · Make it simple</div>
         <button class="pw-skip" id="btn-skip">Ahora no (el caos sigue igual)</button>
       </div>
     </div>
@@ -1323,8 +1371,7 @@ body {
 
 <script>
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
-// Cambiá esta URL por la de tu backend en Railway cuando hagas el deploy
-const BACKEND_URL = 'https://TU-BACKEND.up.railway.app';
+const BACKEND_URL = 'https://glitchcaos-production.up.railway.app';
 
 // ID único de sesión del jugador — persiste en localStorage
 function getSessionId() {
