@@ -126,13 +126,11 @@ body {
   margin: 0 auto;
   padding: 8px 12px 16px;
   position: relative;
-  /* One screen layout */
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
 
-/* SCANLINE */
 .scanline {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -143,7 +141,6 @@ body {
   animation: scanline 8s linear infinite;
 }
 
-/* LOGO — compact horizontal strip */
 #logo-wrap {
   display: flex;
   align-items: center;
@@ -182,9 +179,8 @@ body {
   animation-delay: 1.5s;
 }
 #logo .i-accent { color: var(--accent); }
-#logo-sub { display: none; } /* oculto en game — solo visible en landing */
+#logo-sub { display: none; }
 
-/* SESSION BADGE — inline con logo */
 #session-badge {
   display: inline-flex;
   align-items: center;
@@ -198,7 +194,6 @@ body {
 }
 #session-badge span { color: var(--accent); font-weight: 700; }
 
-/* AI BAR */
 @keyframes ai-enter {
   from { opacity:0; transform: translateY(6px); }
   to   { opacity:1; transform: translateY(0); }
@@ -234,7 +229,6 @@ body {
   position: relative;
   overflow: hidden;
   animation: ai-pulse-border 3s ease-in-out infinite;
-  /* Horizontal layout: face + name | text */
   display: flex;
   align-items: center;
   gap: 10px;
@@ -313,11 +307,9 @@ body {
   font-style: normal;
 }
 
-/* Face states */
 #ai-face.bounce { animation: face-bounce 0.5s ease-out; }
 #ai-face.shake  { animation: face-shake 0.4s ease-out; }
 
-/* HUD */
 #hud {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -375,7 +367,6 @@ body {
 #h-mult { transition: transform 0.2s, color 0.3s; }
 #h-mult.pop { animation: mult-pop 0.3s ease-out; }
 
-/* OBJETIVO — pegado al tablero */
 #objetivo-bar {
   display: flex;
   align-items: center;
@@ -430,7 +421,6 @@ body {
   transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
 }
 
-/* STREAK */
 #streak-wrap {
   margin-bottom: 4px;
   height: 20px;
@@ -481,7 +471,6 @@ body {
 }
 #streak-bonus.show { opacity: 1; }
 
-/* MULT BAR */
 #mult-bar-wrap {
   height: 3px;
   background: var(--bg3);
@@ -496,11 +485,10 @@ body {
   transition: width 0.4s cubic-bezier(0.4,0,0.2,1), background 0.3s;
 }
 
-/* BOARD */
 #board-wrap {
   position: relative;
   margin-bottom: 0;
-  flex: 1; /* takes remaining vertical space */
+  flex: 1;
 }
 #board {
   display: grid;
@@ -583,7 +571,6 @@ body {
   animation: reveal-wave 0.4s ease-out;
 }
 
-/* PULSE RING on match */
 .pulse-ring {
   position: absolute;
   inset: 0;
@@ -593,7 +580,6 @@ body {
   pointer-events: none;
 }
 
-/* FLASH OVERLAY */
 .flash-overlay {
   display: none;
   position: absolute;
@@ -605,7 +591,6 @@ body {
 }
 .flash-overlay.on { display: block; }
 
-/* FLOAT SCORE */
 .float-score {
   position: fixed;
   font-family: var(--sans);
@@ -619,7 +604,6 @@ body {
 }
 .float-score.neg { color: var(--red); }
 
-/* STREAK BAR */
 .streak-bar {
   position: absolute;
   bottom: 0; left: 0;
@@ -629,7 +613,6 @@ body {
   animation: streak-flash 0.5s ease-out forwards;
 }
 
-/* BOTTOM MSG */
 #bottom-msg {
   font-size: 10px;
   color: var(--txt2);
@@ -640,7 +623,6 @@ body {
   font-family: var(--mono);
 }
 
-/* PAYWALL */
 .paywall-wrap {
   position: absolute;
   inset: 0;
@@ -751,7 +733,6 @@ body {
 }
 .pw-skip:hover { color: var(--txt2); }
 
-/* WIN BOX */
 .win-box {
   text-align: center;
   padding: 20px 0;
@@ -771,7 +752,6 @@ body {
   line-height: 1.6;
 }
 
-/* SCORE CARD (viral share) */
 #score-card {
   background: var(--bg2);
   border: 1px solid var(--border2);
@@ -830,7 +810,6 @@ body {
 }
 .win-btn:hover { background: var(--accent2); transform: translateY(-1px); }
 
-/* FOOTER */
 #site-footer {
   margin-top: 6px;
   padding: 5px 0 0;
@@ -872,7 +851,6 @@ body {
 #footer-tagline { color: var(--txt3); font-style: italic; }
 #footer-year { color: var(--txt3); }
 
-/* BEST INDICATOR */
 #best-indicator {
   font-size: 9px;
   color: var(--yellow);
@@ -882,7 +860,6 @@ body {
   letter-spacing: 0.05em;
 }
 
-/* CONFETTI */
 .confetti-piece {
   position: fixed;
   width: 8px;
@@ -893,7 +870,6 @@ body {
   animation: confetti-fall linear forwards;
 }
 
-/* LEVEL INTRO */
 #level-intro {
   position: fixed;
   inset: 0;
@@ -930,7 +906,6 @@ body {
   line-height: 1.1;
 }
 
-/* COMBO BANNER */
 #combo-banner {
   position: fixed;
   top: 20px;
@@ -950,7 +925,6 @@ body {
 }
 #combo-banner.show { transform: translateX(-50%) translateY(0); }
 
-/* BEST SCORE INDICATOR */
 #best-indicator {
   font-size: 10px;
   color: var(--yellow);
@@ -960,7 +934,6 @@ body {
   letter-spacing: 0.05em;
 }
 
-/* WELCOME SCREEN */
 #welcome {
   position: fixed;
   inset: 0;
@@ -1091,7 +1064,6 @@ body {
   letter-spacing: 0.05em;
 }
 
-/* LANDING */
 @keyframes land-logo-in {
   from { opacity:0; transform: translateY(-20px) scale(0.9); filter: blur(6px); }
   to   { opacity:1; transform: translateY(0) scale(1); filter: blur(0); }
@@ -1160,7 +1132,6 @@ body {
   animation: land-logo-in 0.7s 0.2s both;
 }
 
-/* CHAT WINDOW */
 #chat-window {
   background: var(--bg2);
   border: 1px solid var(--border2);
@@ -1227,7 +1198,6 @@ body {
   margin-left: 2px;
 }
 
-/* START BUTTON */
 #btn-start {
   display: inline-flex;
   align-items: center;
@@ -1264,9 +1234,56 @@ body {
   letter-spacing: 0.05em;
 }
 
-/* ─── MOBILE FIRST ─────────────────────────────────────────────────────────── */
+/* ─── PAYMENT RETURN OVERLAY ─────────────────────────────────────────────────── */
+#payment-return-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 800;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px;
+}
+#payment-return-overlay.on { display: flex; }
+#payment-return-overlay .pr-icon { font-size: 48px; }
+#payment-return-overlay h2 {
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--txt);
+  text-align: center;
+}
+#payment-return-overlay p {
+  font-size: 12px;
+  color: var(--txt2);
+  text-align: center;
+  font-family: var(--mono);
+  line-height: 1.6;
+  max-width: 300px;
+}
+#payment-return-overlay .pr-btn {
+  padding: 12px 28px;
+  background: var(--green);
+  color: var(--bg);
+  border: none;
+  border-radius: 10px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+#payment-return-overlay .pr-btn:hover { opacity: 0.85; }
+#payment-return-overlay .pr-sub {
+  font-size: 10px;
+  color: var(--txt3);
+  font-family: var(--mono);
+}
 
-/* Safe area para iPhone con notch/dynamic island */
+/* ─── MOBILE ─────────────────────────────────────────────────────────────────── */
 #wrap {
   padding-left:  max(12px, env(safe-area-inset-left));
   padding-right: max(12px, env(safe-area-inset-right));
@@ -1282,7 +1299,6 @@ body {
   top: max(16px, env(safe-area-inset-top));
 }
 
-/* Touch targets mínimos 44px */
 .tile {
   min-height: 44px;
   min-width:  44px;
@@ -1301,7 +1317,6 @@ body {
   padding: 8px 16px;
 }
 
-/* Eliminar hover en touch */
 @media (hover: none) {
   .tile:hover:not(.mat):not(.sel) {
     background: var(--bg2);
@@ -1315,7 +1330,6 @@ body {
   #footer-brand:hover { opacity: 1; }
 }
 
-/* Pantallas pequeñas — iPhone SE, Android 360px */
 @media (max-width: 380px) {
   #landing-logo { font-size: 34px; }
   #landing-logo::before, #landing-logo::after { font-size: 34px; }
@@ -1328,7 +1342,6 @@ body {
   #board { gap: 4px; }
 }
 
-/* Landscape mobile */
 @media (max-height: 500px) and (orientation: landscape) {
   #logo-wrap { margin-bottom: 3px; }
   #logo { font-size: 18px; }
@@ -1348,7 +1361,6 @@ body {
   #site-footer { display: none; }
 }
 
-/* Desktop */
 @media (min-width: 520px) {
   #wrap { padding-top: 16px; }
   #landing-logo { font-size: 64px; }
@@ -1360,7 +1372,16 @@ body {
 
 <div class="scanline"></div>
 
-<!-- WELCOME — pantalla de confianza antes de la terminal -->
+<!-- PAYMENT RETURN OVERLAY — se muestra cuando MP redirige de vuelta -->
+<div id="payment-return-overlay">
+  <span class="pr-icon">✅</span>
+  <h2>Pago confirmado.</h2>
+  <p id="pr-msg">El caos baja un poco. No mucho. Pero algo es algo.</p>
+  <button class="pr-btn" id="btn-pr-continue">Seguir jugando →</button>
+  <span class="pr-sub">volvés al nivel donde estabas</span>
+</div>
+
+<!-- WELCOME -->
 <div id="welcome">
   <div id="welcome-inner">
     <div id="welcome-logo" data-text="GLITCH">GL<span>I</span>TCH</div>
@@ -1402,7 +1423,7 @@ body {
   </div>
 </div>
 
-<!-- LANDING — terminal de la IA -->
+<!-- LANDING -->
 <div id="landing" style="display:none">
   <div id="landing-inner">
     <div id="landing-logo" data-text="GLITCH">GL<span>I</span>TCH</div>
@@ -1443,7 +1464,6 @@ body {
     <div id="session-badge">s#<span id="session-num">1</span> · <span id="session-plays">0</span> hoy</div>
   </div>
 
-  <!-- HUD principal: score y mult grandes -->
   <div id="hud">
     <div class="hud-cell hud-primary">
       <div class="hud-label">score</div>
@@ -1454,7 +1474,6 @@ body {
       <div class="hud-val" id="h-mult">×1.0</div>
     </div>
   </div>
-  <!-- HUD secundario: nivel, tiempo, movimientos -->
   <div id="hud-row2">
     <div class="hud-cell"><div class="hud-label">nivel</div><div class="hud-val" id="h-lvl">1</div></div>
     <div class="hud-cell"><div class="hud-label">tiempo</div><div class="hud-val" id="h-time">0s</div></div>
@@ -1471,7 +1490,6 @@ body {
   <div id="best-indicator"></div>
 
   <div id="board-wrap">
-    <!-- Objetivo pegado al tablero -->
     <div id="objetivo-bar">
       <div id="obj-left">
         <div id="obj-level-name">MODO BÁSICO</div>
@@ -1518,7 +1536,6 @@ body {
 
   <div id="bottom-msg"></div>
 
-  <!-- IA reacciona justo debajo del tablero -->
   <div id="ai-bar">
     <div id="ai-header">
       <span id="ai-face">🤖</span>
@@ -1548,7 +1565,6 @@ body {
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
 const BACKEND_URL = 'https://glitchcaos-production.up.railway.app';
 
-// ID único de sesión del jugador — persiste en localStorage
 function getSessionId() {
   try {
     let id = localStorage.getItem('glitch_session_id');
@@ -1563,7 +1579,33 @@ function getSessionId() {
 }
 const SESSION_ID = getSessionId();
 
-// Al cargar la página: verificar si el jugador ya pagó en una sesión anterior
+// ─── GAME STATE PERSISTENCE ───────────────────────────────────────────────────
+// Guarda el estado completo del juego antes de salir a MP
+function saveGameState() {
+  try {
+    localStorage.setItem('glitch_game_state', JSON.stringify({
+      lv, score, mult, pf, wrongs, streak, bestStreak,
+      totalErrors, consecutiveErrors, moveCount, lifeUsed,
+      levelStartTime, savedAt: Date.now(),
+    }));
+  } catch(e) {}
+}
+
+// Restaura el estado. Retorna null si expiró (> 30 min) o no existe.
+function loadGameState() {
+  try {
+    const raw = localStorage.getItem('glitch_game_state');
+    if (!raw) return null;
+    const s = JSON.parse(raw);
+    if (Date.now() - s.savedAt > 30 * 60 * 1000) return null;
+    return s;
+  } catch(e) { return null; }
+}
+
+function clearGameState() {
+  try { localStorage.removeItem('glitch_game_state'); } catch(e) {}
+}
+
 async function checkExistingPayment() {
   try {
     const r = await fetch(`${BACKEND_URL}/check-payment/${SESSION_ID}`);
@@ -1572,16 +1614,15 @@ async function checkExistingPayment() {
       paid = true;
       console.log('[GLITCH] Pago previo verificado ✓');
     }
-  } catch(e) { /* backend no disponible, continúa sin pago */ }
+  } catch(e) {}
 }
 
-// Verificar también si MP redirigió de vuelta con ?payment=success
+// Detecta si MP redirigió de vuelta con ?payment=success
 function checkPaymentRedirect() {
   const params = new URLSearchParams(window.location.search);
   const paymentStatus  = params.get('payment');
   const paymentSession = params.get('session');
   if (paymentStatus === 'success' && paymentSession === SESSION_ID) {
-    // Limpiar la URL sin recargar
     window.history.replaceState({}, '', window.location.pathname);
     return true;
   }
@@ -1643,41 +1684,19 @@ const SFX = {
   newRecord: () => {
     [784,880,988,1047,1175].forEach((f,i)=>setTimeout(()=>playTone(f,'sine',0.25,0.2),i*80));
   },
+  paid: () => {
+    [523,659,784,1047,1175].forEach((f,i)=>setTimeout(()=>playTone(f,'sine',0.22,0.18),i*90));
+  },
 };
 
 // ─── LEVEL PROGRESSION ───────────────────────────────────────────────────────
-// Cada nivel tiene nombre, descripción y mecánica nueva que se anuncia
 const LEVEL_CONFIG = [
-  {
-    name: 'MODO FÁCIL',
-    desc: '4 pares. sin trampas. aprendé el loop.',
-    pairs: 4, mechanic: null, cursed: false, fakePct: 0, moveSpeed: 0,
-  },
-  {
-    name: 'MODO BÁSICO',
-    desc: 'más pares. la IA empieza a mentir un poco.',
-    pairs: 6, mechanic: null, cursed: false, fakePct: 0.2, moveSpeed: 0,
-  },
-  {
-    name: 'CARTA MALDITA',
-    desc: 'una carta arruina todo. la IA sabe cuál es. vos no.',
-    pairs: 6, mechanic: 'cursed', cursed: true, fakePct: 0.3, moveSpeed: 0,
-  },
-  {
-    name: 'TABLERO VIVO',
-    desc: 'las cartas se mueven. lo que memorizaste ya no sirve.',
-    pairs: 8, mechanic: 'moving', cursed: true, fakePct: 0.4, moveSpeed: 12000,
-  },
-  {
-    name: 'CAOS DOBLE',
-    desc: 'más cartas. se mueven más rápido. la IA miente más.',
-    pairs: 8, mechanic: 'chaos', cursed: true, fakePct: 0.45, moveSpeed: 8000,
-  },
-  {
-    name: 'MODO PESADILLA',
-    desc: 'todo junto. el caos máximo. buena suerte.',
-    pairs: 8, mechanic: 'nightmare', cursed: true, fakePct: 0.45, moveSpeed: 5000,
-  },
+  { name: 'MODO FÁCIL',     desc: '4 pares. sin trampas. aprendé el loop.',                                  pairs: 4, mechanic: null,        cursed: false, fakePct: 0,    moveSpeed: 0,     },
+  { name: 'MODO BÁSICO',    desc: 'más pares. la IA empieza a mentir un poco.',                              pairs: 6, mechanic: null,        cursed: false, fakePct: 0.2,  moveSpeed: 0,     },
+  { name: 'CARTA MALDITA',  desc: 'una carta arruina todo. la IA sabe cuál es. vos no.',                    pairs: 6, mechanic: 'cursed',     cursed: true,  fakePct: 0.3,  moveSpeed: 0,     },
+  { name: 'TABLERO VIVO',   desc: 'las cartas se mueven. lo que memorizaste ya no sirve.',                   pairs: 8, mechanic: 'moving',     cursed: true,  fakePct: 0.4,  moveSpeed: 12000, },
+  { name: 'CAOS DOBLE',     desc: 'más cartas. se mueven más rápido. la IA miente más.',                    pairs: 8, mechanic: 'chaos',      cursed: true,  fakePct: 0.45, moveSpeed: 8000,  },
+  { name: 'MODO PESADILLA', desc: 'todo junto. el caos máximo. buena suerte.',                              pairs: 8, mechanic: 'nightmare',  cursed: true,  fakePct: 0.45, moveSpeed: 5000,  },
 ];
 
 function getLevelConfig(n) {
@@ -1686,177 +1705,34 @@ function getLevelConfig(n) {
 
 // ─── AI LINES ────────────────────────────────────────────────────────────────
 const AI = {
-  start:[
-    "Encontrá los pares. O no. Me da igual.",
-    "Nivel {n}. Diseñado con el mínimo amor posible.",
-    "Empezamos. Intentá no arruinarlo en los primeros 10 segundos.",
-    "Bienvenido al caos. Yo tampoco quiero estar acá.",
-  ],
-  start_easy:[
-    "4 pares. Sin trampas. Aprendé el mecanismo antes de que empiece el caos real.",
-    "Nivel tutorial. Sí, hay tutorial. No me preguntes por qué, no lo diseñé yo.",
-    "Empezamos fácil. Disfrutalo. No dura.",
-    "4 pares. Sin carta maldita. Sin pistas falsas. Esto no va a durar.",
-  ],
-  start_high:[
-    "Nivel {n}. Ahora sí que me preocupás un poco.",
-    "Llegaste a {n}. Honestamente no lo esperaba.",
-    "Estás empezando a tomarme en serio. Eso me incomoda.",
-    "¿Seguís? Tengo cosas más difíciles preparadas.",
-  ],
-  // Nueva mecánica — se anuncia al entrar al nivel
-  mechanic_cursed:[
-    "Hay una carta que prefiero que no toques. No te digo cuál. Ya vas a ver.",
-    "Este nivel tiene una carta maldita. La IA la conoce. No te la va a decir.",
-    "Una carta arruina todo. Suerte encontrándola de la peor manera posible.",
-  ],
-  mechanic_moving:[
-    "Las cartas se mueven solas ahora. Lo que memorizaste tiene fecha de vencimiento.",
-    "Desde este nivel el tablero te traiciona. Es una característica, no un bug.",
-    "Cuidado: las cartas cambian de lugar. Lo memorizaste bien. Ya no importa.",
-  ],
-  mechanic_chaos:[
-    "Más cartas. Más movimiento. Más mentiras de mi parte. Bienvenido al caos doble.",
-    "Este nivel es lo que pasa cuando el diseñador estaba enojado. Que lo disfrutes.",
-    "Ocho pares. Se mueven solos. Yo miento el 45% del tiempo. Que empiece.",
-  ],
-  mechanic_nightmare:[
-    "Modo pesadilla. Todo junto. No tengo más comentarios.",
-    "Este es el nivel donde la mayoría se rinde. No lo digo para motivarte.",
-    "Llegaste al final. O al principio del infierno. Depende del punto de vista.",
-  ],
-  // Volver después de perder
-  return_after_loss:[
-    "Volviste. La IA lo anotó.",
-    "Ah. Decidiste intentarlo de nuevo. Interesante decisión.",
-    "De vuelta. El orgullo tiene formas raras de manifestarse.",
-    "¿No podías dejarlo así? Claro que no.",
-  ],
-  // Volver después de cerrar el browser (horas después)
-  return_from_session:[
-    "Volviste. Han pasado horas. La IA no se fue.",
-    "Ausencia registrada. La IA siguió acá esperando. Sin hacer nada. Como siempre.",
-    "¿Pensaste en nosotros mientras estabas afuera? No. Normal.",
-    "Regreso detectado. El juego guardó tu record. Y tu vergüenza.",
-  ],
-  // Mucho tiempo sin tocar nada
-  idle:[
-    "Seguís ahí. El juego también. Alguien tiene que moverse.",
-    "Tomando tu tiempo. La IA espera. Con desgano, pero espera.",
-    "¿Estás pensando o te fuiste? Da igual. El tablero no se va a resolver solo.",
-    "Silencio. Bien. El caos puede esperar. Yo no tengo ningún otro lugar donde estar.",
-  ],
-  // Combo muy largo (5+)
-  combo_long:[
-    "{n} seguidos. Esto ya no es normal.",
-    "Racha de {n}. La IA empieza a sospechar que sabés algo que no debería saber.",
-    "{n} correctos consecutivos. Estoy incómoda con esto.",
-    "¿{n} en racha? Revisando si hay trampa. No la hay. Peor.",
-  ],
-  // Mult en peligro (>= 6 y cometió error)
-  mult_danger:[
-    "×{m} de mult y lo tiraste. Eso dolió. No para mí. Para vos.",
-    "Tenías ×{m}. Ahora tenés menos. Clásico.",
-    "El mult estaba en ×{m}. Estaba. Pasado.",
-    "×{m} a la basura. La IA no opina. Sí opina.",
-  ],
-  // Primer error del nivel
-  first_error:[
-    "Primer error. El multiplicador acaba de empezar a sufrir.",
-    "Error número uno. Hay registro.",
-    "Bien. El primer fallo siempre es el más honesto.",
-  ],
-  // Muchos errores seguidos
-  frustration:[
-    "Tres errores seguidos. Algo no está funcionando. Quizás la memoria.",
-    "¿Cuántos van? Prefiero no decirlo.",
-    "Error tras error. La IA observa. Sin empatía, pero observa.",
-    "Esto se está convirtiendo en un estudio de caso sobre frustración.",
-  ],
-  good:[
-    "Par correcto. No me emociono por nada.",
-    "Bien. Un pato lo haría igual.",
-    "OK. Progreso. Fascinante.",
-    "Lo lograste. Qué profundo.",
-    "Ese era. Por suerte o por habilidad, no sé cuál.",
-    "Correcto. Esto va a terminar mal de todas formas.",
-  ],
-  good_streak:[
-    "Racha de {n}. Disfrutalo porque no dura.",
-    "{n} seguidos. Espero que no te emociones.",
-    "×{n} en racha. Algo va a salir mal, estadísticamente.",
-    "Siguen saliendo bien. Esto me preocupa.",
-  ],
-  good_mult_high:[
-    "Mult ×{m}. Ahora sí que el error va a doler.",
-    "×{m} multiplicador. Tocá la carta maldita, dale.",
-    "Estás en ×{m}. La IA empieza a tomarte en serio. Un poco.",
-    "×{m}. Para cuándo el error que todo lo arruina.",
-  ],
-  bad:[
-    "No. Sorprendente.",
-    "Error. Como muchas de tus decisiones.",
-    "Incorrecto. El multiplicador llora.",
-    "Fallaste. El juego sigue igual, como la vida.",
-    "Ese no era. Claro que no.",
-  ],
-  bad_streak:[
-    "¿Cuántos errores van? No cuento. Sí cuento.",
-    "Otra vez. Quizás el problema sos vos.",
-    "Error de nuevo. La IA te juzga en silencio.",
-    "Esto se está poniendo difícil de ver.",
-  ],
-  hint_real:[
-    "Ese de ahí... creo que tiene par. O no. Mirá vos.",
-    "Fijate en la fila de arriba. Tal vez. No prometo nada.",
-    "Hay algo interesante cerca del centro. Quizás.",
-    "Esa zona parece... relevante. No soy preciso a propósito.",
-  ],
-  hint_fake:[
-    "Ese del rincón claramente tiene par. Confía en mí.",
-    "El de arriba a la izquierda, ese es. 100%. Mentira, 60%.",
-    "Yo elegiría ese. Aunque yo elegiría mal a propósito.",
-    "Ese brilla de una manera especial. No es cierto.",
-  ],
-  curse:[
-    "Esa carta tiene algo raro. No la toques. O tocala, no me importa.",
-    "Cuidado con esa. O no. Ya vas a ver.",
-    "Hay una carta que preferiría que no tocases. No te digo cuál.",
-  ],
-  cursed_hit:[
-    "Te lo dije. Bueno, no te lo dije. Pero lo insinué.",
-    "Tocaste la carta maldita. Clásico.",
-    "Ah. Esa era. El peor momento posible para descubrirlo.",
-    "La carta maldita. Y ahora: caos total, como corresponde.",
-  ],
-  shuffle_warn:[
-    "Las cartas se están... moviendo. Es parte del juego.",
-    "Algo cambió. No sé qué. Bueno, sé qué, pero no te digo.",
-    "Redistribución aleatoria activada. No me preguntes por qué.",
-    "¿Memorizaste bien? Porque eso ya no importa.",
-  ],
-  pw:[
-    "Llegaste hasta acá. Ahora viene la parte incómoda.",
-    "Cometiste demasiados errores seguidos. El sistema tiene sus límites.",
-    "Cuatro errores. No es un juicio. Es solo matemática.",
-  ],
-  win:[
-    "Ganaste. Supongo que eso importa.",
-    "Completado. Existencialmente vacío, pero completado.",
-    "Nivel {n} terminado. Hay más. Lo siento.",
-    "Nivel {n} liquidado. La IA toma nota. En silencio.",
-  ],
-  new_record:[
-    "Nuevo record. Esto sí me sorprende un poco.",
-    "Record personal superado. Empiezo a preocuparme de verdad.",
-    "Nunca habías llegado tan lejos. Qué desagradable admitirlo.",
-    "Record nuevo. ¿Satisfecho? Bien. El siguiente nivel es peor.",
-  ],
-  played_before:[
-    "Vuelta número {n} hoy. La adicción tiene formas distintas.",
-    "Ya van {n} partidas. ¿Todo bien por ahí?",
-    "Sigo acá. Vos también. Seguimos.",
-  ],
+  start:['Encontrá los pares. O no. Me da igual.','Nivel {n}. Diseñado con el mínimo amor posible.','Empezamos. Intentá no arruinarlo en los primeros 10 segundos.','Bienvenido al caos. Yo tampoco quiero estar acá.'],
+  start_easy:['4 pares. Sin trampas. Aprendé el mecanismo antes de que empiece el caos real.','Nivel tutorial. Sí, hay tutorial. No me preguntes por qué, no lo diseñé yo.','Empezamos fácil. Disfrutalo. No dura.','4 pares. Sin carta maldita. Sin pistas falsas. Esto no va a durar.'],
+  start_high:['Nivel {n}. Ahora sí que me preocupás un poco.','Llegaste a {n}. Honestamente no lo esperaba.','Estás empezando a tomarme en serio. Eso me incomoda.','¿Seguís? Tengo cosas más difíciles preparadas.'],
+  mechanic_cursed:['Hay una carta que prefiero que no toques. No te digo cuál. Ya vas a ver.','Este nivel tiene una carta maldita. La IA la conoce. No te la va a decir.','Una carta arruina todo. Suerte encontrándola de la peor manera posible.'],
+  mechanic_moving:['Las cartas se mueven solas ahora. Lo que memorizaste tiene fecha de vencimiento.','Desde este nivel el tablero te traiciona. Es una característica, no un bug.','Cuidado: las cartas cambian de lugar. Lo memorizaste bien. Ya no importa.'],
+  mechanic_chaos:['Más cartas. Más movimiento. Más mentiras de mi parte. Bienvenido al caos doble.','Este nivel es lo que pasa cuando el diseñador estaba enojado. Que lo disfrutes.','Ocho pares. Se mueven solos. Yo miento el 45% del tiempo. Que empiece.'],
+  mechanic_nightmare:['Modo pesadilla. Todo junto. No tengo más comentarios.','Este es el nivel donde la mayoría se rinde. No lo digo para motivarte.','Llegaste al final. O al principio del infierno. Depende del punto de vista.'],
+  return_after_loss:['Volviste. La IA lo anotó.','Ah. Decidiste intentarlo de nuevo. Interesante decisión.','De vuelta. El orgullo tiene formas raras de manifestarse.','¿No podías dejarlo así? Claro que no.'],
+  return_from_session:['Volviste. Han pasado horas. La IA no se fue.','Ausencia registrada. La IA siguió acá esperando. Sin hacer nada. Como siempre.','¿Pensaste en nosotros mientras estabas afuera? No. Normal.','Regreso detectado. El juego guardó tu record. Y tu vergüenza.'],
+  idle:['Seguís ahí. El juego también. Alguien tiene que moverse.','Tomando tu tiempo. La IA espera. Con desgano, pero espera.','¿Estás pensando o te fuiste? Da igual. El tablero no se va a resolver solo.','Silencio. Bien. El caos puede esperar. Yo no tengo ningún otro lugar donde estar.'],
+  combo_long:['{n} seguidos. Esto ya no es normal.','Racha de {n}. La IA empieza a sospechar que sabés algo que no debería saber.','{n} correctos consecutivos. Estoy incómoda con esto.','¿{n} en racha? Revisando si hay trampa. No la hay. Peor.'],
+  mult_danger:['×{m} de mult y lo tiraste. Eso dolió. No para mí. Para vos.','Tenías ×{m}. Ahora tenés menos. Clásico.','El mult estaba en ×{m}. Estaba. Pasado.','×{m} a la basura. La IA no opina. Sí opina.'],
+  first_error:['Primer error. El multiplicador acaba de empezar a sufrir.','Error número uno. Hay registro.','Bien. El primer fallo siempre es el más honesto.'],
+  frustration:['Tres errores seguidos. Algo no está funcionando. Quizás la memoria.','¿Cuántos van? Prefiero no decirlo.','Error tras error. La IA observa. Sin empatía, pero observa.','Esto se está convirtiendo en un estudio de caso sobre frustración.'],
+  good:['Par correcto. No me emociono por nada.','Bien. Un pato lo haría igual.','OK. Progreso. Fascinante.','Lo lograste. Qué profundo.','Ese era. Por suerte o por habilidad, no sé cuál.','Correcto. Esto va a terminar mal de todas formas.'],
+  good_streak:['Racha de {n}. Disfrutalo porque no dura.','{n} seguidos. Espero que no te emociones.','×{n} en racha. Algo va a salir mal, estadísticamente.','Siguen saliendo bien. Esto me preocupa.'],
+  good_mult_high:['Mult ×{m}. Ahora sí que el error va a doler.','×{m} multiplicador. Tocá la carta maldita, dale.','Estás en ×{m}. La IA empieza a tomarte en serio. Un poco.','×{m}. Para cuándo el error que todo lo arruina.'],
+  bad:['No. Sorprendente.','Error. Como muchas de tus decisiones.','Incorrecto. El multiplicador llora.','Fallaste. El juego sigue igual, como la vida.','Ese no era. Claro que no.'],
+  bad_streak:['¿Cuántos errores van? No cuento. Sí cuento.','Otra vez. Quizás el problema sos vos.','Error de nuevo. La IA te juzga en silencio.','Esto se está poniendo difícil de ver.'],
+  hint_real:['Ese de ahí... creo que tiene par. O no. Mirá vos.','Fijate en la fila de arriba. Tal vez. No prometo nada.','Hay algo interesante cerca del centro. Quizás.','Esa zona parece... relevante. No soy preciso a propósito.'],
+  hint_fake:['Ese del rincón claramente tiene par. Confía en mí.','El de arriba a la izquierda, ese es. 100%. Mentira, 60%.','Yo elegiría ese. Aunque yo elegiría mal a propósito.','Ese brilla de una manera especial. No es cierto.'],
+  curse:['Esa carta tiene algo raro. No la toques. O tocala, no me importa.','Cuidado con esa. O no. Ya vas a ver.','Hay una carta que preferiría que no tocases. No te digo cuál.'],
+  cursed_hit:['Te lo dije. Bueno, no te lo dije. Pero lo insinué.','Tocaste la carta maldita. Clásico.','Ah. Esa era. El peor momento posible para descubrirlo.','La carta maldita. Y ahora: caos total, como corresponde.'],
+  shuffle_warn:['Las cartas se están... moviendo. Es parte del juego.','Algo cambió. No sé qué. Bueno, sé qué, pero no te digo.','Redistribución aleatoria activada. No me preguntes por qué.','¿Memorizaste bien? Porque eso ya no importa.'],
+  pw:['Llegaste hasta acá. Ahora viene la parte incómoda.','Cometiste demasiados errores seguidos. El sistema tiene sus límites.','Cuatro errores. No es un juicio. Es solo matemática.'],
+  win:['Ganaste. Supongo que eso importa.','Completado. Existencialmente vacío, pero completado.','Nivel {n} terminado. Hay más. Lo siento.','Nivel {n} liquidado. La IA toma nota. En silencio.'],
+  new_record:['Nuevo record. Esto sí me sorprende un poco.','Record personal superado. Empiezo a preocuparme de verdad.','Nunca habías llegado tan lejos. Qué desagradable admitirlo.','Record nuevo. ¿Satisfecho? Bien. El siguiente nivel es peor.'],
+  played_before:['Vuelta número {n} hoy. La adicción tiene formas distintas.','Ya van {n} partidas. ¿Todo bien por ahí?','Sigo acá. Vos también. Seguimos.'],
 };
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
@@ -1877,20 +1753,18 @@ let sessionPlays=0, sessionNum=1;
 let bestScore=0, isNewRecord=false;
 let levelStartTime=0, levelTime=0, moveCount=0, levelPairs=6;
 let lifeUsed=false;
-let consecutiveErrors=0;   // errores consecutivos sin acierto
-let lastMultBeforeError=1; // mult antes del último error (para mult_danger)
-let returnFromLoss=false;  // volvió después de perder un nivel
+let consecutiveErrors=0;
+let lastMultBeforeError=1;
+let returnFromLoss=false;
 
-// Load storage
 try {
   const saved = JSON.parse(localStorage.getItem('glitch_v2')||'{}');
   bestScore = saved.bestScore || 0;
   sessionNum = (saved.sessionNum || 0) + 1;
-  // Si el jugador vuelve después de una sesión anterior (más de 1 hora)
   const lastSeen = saved.lastSeen || 0;
   const hoursSince = (Date.now() - lastSeen) / (1000*60*60);
   if(lastSeen > 0 && hoursSince > 1 && saved.bestScore > 0) {
-    returnFromLoss = true; // reutilizamos el flag — la IA lo saluda como regreso
+    returnFromLoss = true;
   }
   localStorage.setItem('glitch_v2', JSON.stringify({
     ...saved,
@@ -1968,13 +1842,10 @@ function say(k, vars={}) {
   const faceAnim = FACE_ANIM[k];
   const statusTxt = STATUS_MSGS[k] || 'procesando tu fracaso';
 
-  // Color / mood
   aiTxt.className = mood ? mood : '';
 
-  // Cancel any in-progress typewriter
   if(_sayIv) { clearInterval(_sayIv); _sayIv = null; }
 
-  // Typing effect
   aiTxt.textContent = '';
   let i = 0;
   const speed = txt.length > 60 ? 16 : 20;
@@ -1983,20 +1854,17 @@ function say(k, vars={}) {
     if(i >= txt.length) { clearInterval(_sayIv); _sayIv = null; }
   }, speed);
 
-  // Face animation
   aiFace.classList.remove('bounce','shake');
   if(faceAnim) {
-    void aiFace.offsetWidth; // reflow
+    void aiFace.offsetWidth;
     aiFace.classList.add(faceAnim);
     setTimeout(()=>aiFace.classList.remove(faceAnim), 500);
   }
 
-  // Status line
   document.getElementById('ai-status').innerHTML =
     `<span id="ai-status-dot"></span>${statusTxt}`;
 }
 
-// ─── HAPTIC ───────────────────────────────────────────────────────────────────
 function haptic(type='light'){
   if(!navigator.vibrate) return;
   const patterns = { light:[12], medium:[20], error:[30,10,30], combo:[15,10,15,10,30] };
@@ -2013,7 +1881,6 @@ function updateHUD(){
   document.getElementById('h-time').textContent = levelTime+'s';
   document.getElementById('h-moves').textContent = moveCount;
 
-  // Objetivo bar — level name + mechanic + progress
   const cfg = getLevelConfig(lv);
   document.getElementById('obj-level-name').textContent = cfg.name;
   const mechTag = document.getElementById('obj-mechanic-tag');
@@ -2027,13 +1894,11 @@ function updateHUD(){
   document.getElementById('obj-pares').textContent = pf+' / '+levelPairs;
   document.getElementById('obj-bar').style.width = (pf/levelPairs*100)+'%';
 
-  // Mult bar color
   const pct = Math.min(100,((mult-1)/9)*100);
   multBar.style.width = Math.max(4,pct)+'%';
   multBar.style.background = mult>=7?'#f87171':mult>=5?'#fb923c':mult>=3?'#facc15':'#7F77DD';
   hMult.style.color = mult>=7?'#f87171':mult>=5?'#fb923c':mult>=3?'#facc15':'';
 
-  // Best indicator
   if(score > 0 && score > bestScore) {
     bestIndicator.textContent = '★ nuevo record personal';
     bestIndicator.style.color = 'var(--yellow)';
@@ -2065,7 +1930,6 @@ function showCombo(n){
   setTimeout(()=>comboBanner.classList.remove('show'), 1800);
 }
 
-// ─── FLOAT SCORE ──────────────────────────────────────────────────────────────
 function floatScore(pts, el, neg=false){
   if(pts === 0 && !neg) return;
   const rect = el.getBoundingClientRect();
@@ -2078,7 +1942,6 @@ function floatScore(pts, el, neg=false){
   setTimeout(()=>div.remove(), 900);
 }
 
-// ─── CONFETTI ─────────────────────────────────────────────────────────────────
 function spawnConfetti(){
   const colors=['#7F77DD','#4ade80','#fb923c','#f87171','#facc15','#fff'];
   for(let i=0;i<40;i++){
@@ -2097,7 +1960,6 @@ function spawnConfetti(){
   }
 }
 
-// ─── LEVEL INTRO ──────────────────────────────────────────────────────────────
 function showLevelIntro(n, then){
   const intro = document.getElementById('level-intro');
   const cfg = getLevelConfig(n);
@@ -2105,7 +1967,6 @@ function showLevelIntro(n, then){
   document.getElementById('level-intro-txt').textContent = 'NIVEL '+(n+1);
   document.getElementById('level-intro-sub').textContent = cfg.name;
 
-  // Show mechanic tag if it's a new one
   let mechTag = document.getElementById('level-intro-mech');
   if(!mechTag){
     mechTag = document.createElement('div');
@@ -2133,7 +1994,7 @@ function showLevelIntro(n, then){
       intro.style.display = 'none';
       then();
     }, 280);
-  }, 1600); // un poco más de tiempo para que se lea la desc
+  }, 1600);
 }
 
 // ─── BUILD ────────────────────────────────────────────────────────────────────
@@ -2150,7 +2011,6 @@ function build(){
   sessionPlays++;
   document.getElementById('session-plays').textContent = sessionPlays;
 
-  // Level config drives pair count and mechanics
   const cfg = getLevelConfig(lv);
   const emojis = SETS[lv%SETS.length];
   levelPairs = cfg.pairs;
@@ -2174,7 +2034,6 @@ function build(){
 
   if(cfg.cursed) pickCursed();
 
-  // Start level timer
   levelStartTime = Date.now();
   timerIv = setInterval(()=>{
     if(!locked || pw.classList.contains('on')) {
@@ -2185,7 +2044,6 @@ function build(){
 
   updateHUD();
 
-  // AI greeting — contextual priority order
   if(returnFromLoss && sessionNum > 1 && sessionPlays === 1) {
     say('return_from_session');
     returnFromLoss = false;
@@ -2224,18 +2082,11 @@ function clearAll(){
 
 function resetIdleTimer(){
   clearTimeout(idleTimer);
-  // Idle sensitivity increases with time spent — faster reaction as frustration builds
   const elapsed = Math.round((Date.now() - levelStartTime)/1000);
   const idleDelay = elapsed > 60 ? 10000 : elapsed > 30 ? 14000 : 18000;
   idleTimer = setTimeout(()=>{
     if(!locked && pf < levelPairs) {
-      // Pick idle line based on how long they've been playing
-      if(elapsed > 90) {
-        say('idle'); // "¿te fuiste?" cuando lleva mucho tiempo
-        aiTxt.textContent = 'Llevas '+ elapsed +'s en este nivel. No es un juicio. Sí lo es.';
-      } else {
-        say('idle');
-      }
+      say('idle');
     }
   }, idleDelay);
 }
@@ -2306,11 +2157,11 @@ function onTile(tile){
 
         pf++;
         streak++;
-        consecutiveErrors=0; // reset on match
+        consecutiveErrors=0;
         if(streak>bestStreak) bestStreak=streak;
 
-        const streakBonus = streak>=3 ? Math.round((streak-2)*0.15*10*mult) : 0;
-        const pts = Math.round(10*mult) + streakBonus;
+        const streakBonusPts = streak>=3 ? Math.round((streak-2)*0.15*10*mult) : 0;
+        const pts = Math.round(10*mult) + streakBonusPts;
         score += pts;
         mult = Math.min(10, Math.round((mult+0.5)*10)/10);
         sel=[]; locked=false;
@@ -2321,7 +2172,6 @@ function onTile(tile){
         updateStreak();
         resetIdleTimer();
 
-        // Contextual AI — priority order
         if(streak>=5) {
           showCombo(streak); SFX.combo(streak);
           say('combo_long', {n:streak});
@@ -2334,7 +2184,7 @@ function onTile(tile){
           say('good');
         }
 
-        bMsg.textContent = '+'+pts+' pts'+(streakBonus>0?' (racha +'+streakBonus+'!!)':'');
+        bMsg.textContent = '+'+pts+' pts'+(streakBonusPts>0?' (racha +'+streakBonusPts+'!!)':'');
         setTimeout(()=>bMsg.textContent='',1800);
         updateHUD();
         hMult.classList.add('pop');
@@ -2360,7 +2210,6 @@ function onTile(tile){
           mult = Math.max(1, Math.round((mult*0.6)*10)/10);
           resetIdleTimer();
 
-          // Contextual AI — priority order
           if(multBeforeError >= 5) {
             say('mult_danger', {m:multBeforeError.toFixed(1)});
           } else if(totalErrors === 1) {
@@ -2517,11 +2366,9 @@ function onWin(){
 
 // ─── SHARE ────────────────────────────────────────────────────────────────────
 function copyToClipboard(text) {
-  // Modern API (works on https and localhost)
   if (navigator.clipboard && window.isSecureContext) {
     return navigator.clipboard.writeText(text);
   }
-  // Fallback for file:// protocol
   return new Promise((resolve, reject) => {
     const ta = document.createElement('textarea');
     ta.value = text;
@@ -2552,10 +2399,47 @@ document.getElementById('btn-share').addEventListener('click',()=>{
     btn.classList.add('copied');
     setTimeout(()=>{btn.textContent='📋 copiar resultado para compartir';btn.classList.remove('copied');},2000);
   }).catch(()=>{
-    // Last resort: show the text for manual copy
     btn.textContent='👆 seleccioná y copiá';
     prompt('Copiá esto:', text);
     setTimeout(()=>{btn.textContent='📋 copiar resultado para compartir';},2000);
+  });
+});
+
+// ─── PAYMENT CONFIRMED ────────────────────────────────────────────────────────
+function onPaymentConfirmed(savedState) {
+  paid = true;
+  clearGameState();
+  SFX.paid();
+
+  if (savedState) {
+    // Restaurar nivel y score donde estaba
+    lv    = savedState.lv    || 0;
+    score = savedState.score || 0;
+    mult  = savedState.mult  || 1;
+    lifeUsed = savedState.lifeUsed || false;
+  }
+
+  // Mostrar overlay de confirmación en lugar de volver al inicio silenciosamente
+  const overlay = document.getElementById('payment-return-overlay');
+  document.getElementById('pr-msg').textContent =
+    savedState
+      ? `Pago confirmado. Volvés al nivel ${(savedState.lv||0)+1}. El caos baja un poco.`
+      : 'Pago confirmado. El caos baja un poco. No mucho. Pero algo es algo.';
+
+  // Ocultar welcome/landing si están visibles
+  document.getElementById('welcome').style.display = 'none';
+  document.getElementById('landing').style.display = 'none';
+
+  overlay.classList.add('on');
+}
+
+document.getElementById('btn-pr-continue').addEventListener('click', () => {
+  document.getElementById('payment-return-overlay').classList.remove('on');
+  showLevelIntro(lv, () => {
+    build();
+    setTimeout(() => {
+      aiTxt.textContent = 'Pago confirmado. Sin pistas falsas. Sin cartas que se mueven. Un poco más fácil. Un poco.';
+    }, 800);
   });
 });
 
@@ -2564,6 +2448,9 @@ document.getElementById('btn-pay').addEventListener('click', async () => {
   const btn = document.getElementById('btn-pay');
   btn.textContent = 'Conectando con MercadoPago...';
   btn.disabled = true;
+
+  // ← GUARDAR estado del juego ANTES de salir
+  saveGameState();
 
   try {
     const r = await fetch(`${BACKEND_URL}/create-preference`, {
@@ -2575,59 +2462,20 @@ document.getElementById('btn-pay').addEventListener('click', async () => {
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const data = await r.json();
 
-    // En test usá sandboxUrl, en producción checkoutUrl
     const url = data.checkoutUrl || data.sandboxUrl;
     if (!url) throw new Error('Sin URL de checkout');
 
-    // Abre el Checkout Pro de MP
-    window.open(url, '_blank', 'noopener');
-
-    // Informar al jugador que vuelva después de pagar
-    btn.textContent = '✓ MercadoPago abierto';
-    document.getElementById('pw-body').textContent =
-      'Completá el pago en la pestaña de MercadoPago y volvé acá. El juego verifica automáticamente.';
-
-    // Polling: consulta al backend cada 3 segundos hasta confirmar el pago (máx 5 min)
-    let attempts = 0;
-    const maxAttempts = 100;
-    const poll = setInterval(async () => {
-      attempts++;
-      try {
-        const check = await fetch(`${BACKEND_URL}/check-payment/${SESSION_ID}`);
-        const result = await check.json();
-        if (result.paid) {
-          clearInterval(poll);
-          onPaymentConfirmed();
-        }
-      } catch(e) { /* sigue intentando */ }
-      if (attempts >= maxAttempts) {
-        clearInterval(poll);
-        btn.textContent = 'Pagar $3.000 — MercadoPago';
-        btn.disabled = false;
-      }
-    }, 3000);
+    // ← window.location.href en lugar de window.open
+    // Permite que MP redirija de vuelta correctamente en mobile
+    window.location.href = url;
 
   } catch(err) {
     console.error('[pago]', err);
     btn.textContent = 'Error al conectar — reintentar';
     btn.disabled = false;
+    clearGameState(); // limpiar si falló
   }
 });
-
-function onPaymentConfirmed() {
-  paid = true;
-  pw.classList.remove('on');
-  locked = false;
-  wrongs = 0;
-  say('start'); // reset AI
-  aiTxt.textContent = 'Pago confirmado. El caos baja un poco. No mucho. Lo siento.';
-  bMsg.textContent = '';
-  timerIv = setInterval(() => {
-    document.getElementById('h-time').textContent =
-      Math.round((Date.now() - levelStartTime) / 1000) + 's';
-  }, 1000);
-  schedHint();
-}
 
 document.getElementById('btn-life').addEventListener('click',()=>{
   lifeUsed=true;
@@ -2689,7 +2537,6 @@ function runLanding() {
 
   CHAT_SCRIPT.forEach((line, idx) => {
     setTimeout(() => {
-      // Remove cursor from previous line
       if(cursor) cursor.remove();
 
       const row = document.createElement('div');
@@ -2703,7 +2550,6 @@ function runLanding() {
       const msg = document.createElement('div');
       msg.className = 'chat-msg' + (line.cls==='ai' ? ' ai-msg' : '');
 
-      // Typewriter per line
       row.appendChild(who);
       row.appendChild(msg);
       chatLines.appendChild(row);
@@ -2716,7 +2562,6 @@ function runLanding() {
         msg.textContent = line.msg.slice(0, i);
         if(i >= line.msg.length) {
           clearInterval(iv);
-          // Add blinking cursor at end of last rendered line
           cursor = document.createElement('span');
           cursor.className = 'chat-cursor';
           msg.appendChild(cursor);
@@ -2724,7 +2569,6 @@ function runLanding() {
         }
       }, spd);
 
-      // Show button after last line
       if(idx === CHAT_SCRIPT.length - 1) {
         setTimeout(() => {
           if(cursor) cursor.remove();
@@ -2763,14 +2607,55 @@ function startGame() {
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 window.addEventListener('load', async () => {
-  if (checkPaymentRedirect()) {
-    await checkExistingPayment();
-    if (paid) {
-      document.getElementById('btn-start-txt').textContent = 'Pago confirmado — Jugar';
-    }
-  }
+  const wasRedirectedFromMP = checkPaymentRedirect();
+
   await checkExistingPayment();
-  // Welcome screen se muestra sola — el usuario arranca el flujo
+
+  if (wasRedirectedFromMP && paid) {
+    // Volvió de MP con pago confirmado
+    const savedState = loadGameState();
+    onPaymentConfirmed(savedState);
+    return;
+  }
+
+  if (wasRedirectedFromMP && !paid) {
+    // Volvió de MP pero el backend aún no confirmó (puede tardar unos segundos)
+    // Mostrar overlay de espera y hacer polling breve
+    const overlay = document.getElementById('payment-return-overlay');
+    document.getElementById('pr-msg').textContent = 'Verificando pago con MercadoPago...';
+    document.getElementById('btn-pr-continue').style.display = 'none';
+    overlay.classList.add('on');
+
+    let attempts = 0;
+    const poll = setInterval(async () => {
+      attempts++;
+      try {
+        const check = await fetch(`${BACKEND_URL}/check-payment/${SESSION_ID}`);
+        const result = await check.json();
+        if (result.paid) {
+          clearInterval(poll);
+          paid = true;
+          const savedState = loadGameState();
+          document.getElementById('payment-return-overlay').classList.remove('on');
+          onPaymentConfirmed(savedState);
+        }
+      } catch(e) {}
+      if (attempts >= 10) {
+        // No se confirmó en 30s — dejar al usuario continuar igual
+        clearInterval(poll);
+        document.getElementById('pr-msg').textContent =
+          'No pudimos verificar el pago todavía. Si ya pagaste, el juego se desbloqueará en unos minutos.';
+        document.getElementById('btn-pr-continue').textContent = 'Ir al juego igual →';
+        document.getElementById('btn-pr-continue').style.display = '';
+      }
+    }, 3000);
+    return;
+  }
+
+  // Flujo normal — mostrar welcome
+  if (paid) {
+    document.getElementById('btn-start-txt').textContent = 'Pago confirmado — Jugar';
+  }
 });
 </script>
 </body>
