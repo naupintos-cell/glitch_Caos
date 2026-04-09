@@ -960,6 +960,137 @@ body {
   letter-spacing: 0.05em;
 }
 
+/* WELCOME SCREEN */
+#welcome {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+#welcome.hide {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+#welcome-inner {
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+#welcome-logo {
+  font-family: var(--sans);
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--txt);
+  position: relative;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+#welcome-logo::before, #welcome-logo::after {
+  content: attr(data-text);
+  position: absolute; top:0; left:0; width:100%; height:100%;
+  font-family: var(--sans); font-size:48px; font-weight:800; letter-spacing:-0.04em;
+}
+#welcome-logo::before { color:var(--red); animation: glitch1 4s infinite 2s; }
+#welcome-logo::after  { color:var(--accent); animation: glitch2 4s infinite 2.5s; }
+#welcome-logo span { color: var(--accent); }
+
+#welcome-tag {
+  font-size: 10px;
+  color: var(--txt3);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  font-family: var(--mono);
+}
+
+#welcome-card {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 4px 0;
+  margin-bottom: 20px;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+#welcome-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+.wc-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.wc-row:last-child { border-bottom: none; }
+.wc-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.wc-title {
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--sans);
+  color: var(--txt);
+  margin-bottom: 2px;
+}
+.wc-desc {
+  font-size: 11px;
+  color: var(--txt2);
+  font-family: var(--mono);
+  line-height: 1.5;
+}
+.wc-desc a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.wc-desc a:hover { text-decoration: underline; }
+
+#btn-welcome {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 28px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  margin-bottom: 12px;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+#btn-welcome:hover {
+  background: var(--accent2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(127,119,221,0.35);
+}
+#btn-welcome span { font-size: 18px; }
+
+#welcome-sub {
+  font-size: 10px;
+  color: var(--txt3);
+  font-family: var(--mono);
+  letter-spacing: 0.05em;
+}
+
 /* LANDING */
 @keyframes land-logo-in {
   from { opacity:0; transform: translateY(-20px) scale(0.9); filter: blur(6px); }
@@ -1229,8 +1360,50 @@ body {
 
 <div class="scanline"></div>
 
-<!-- LANDING -->
-<div id="landing">
+<!-- WELCOME — pantalla de confianza antes de la terminal -->
+<div id="welcome">
+  <div id="welcome-inner">
+    <div id="welcome-logo" data-text="GLITCH">GL<span>I</span>TCH</div>
+    <div id="welcome-tag">el juego que te odia</div>
+
+    <div id="welcome-card">
+      <div class="wc-row">
+        <span class="wc-icon">🎮</span>
+        <div>
+          <div class="wc-title">Un juego de memoria</div>
+          <div class="wc-desc">Encontrá los pares antes de que el caos te gane. Gratis para probar.</div>
+        </div>
+      </div>
+      <div class="wc-row">
+        <span class="wc-icon">🤖</span>
+        <div>
+          <div class="wc-title">Con una IA que no quiere trabajar</div>
+          <div class="wc-desc">Te da pistas. A veces falsas. Te juzga. Siempre.</div>
+        </div>
+      </div>
+      <div class="wc-row">
+        <span class="wc-icon">💳</span>
+        <div>
+          <div class="wc-title">Sin datos, sin registro</div>
+          <div class="wc-desc">Jugás directo. Si querés desbloquear todo, son $3.000 ARS una sola vez vía MercadoPago.</div>
+        </div>
+      </div>
+      <div class="wc-row">
+        <span class="wc-icon">🏢</span>
+        <div>
+          <div class="wc-title">Hecho por KAIRO</div>
+          <div class="wc-desc"><a href="https://kairo.com.ar" target="_blank" rel="noopener">kairo.com.ar</a> · Make it simple · Buenos Aires</div>
+        </div>
+      </div>
+    </div>
+
+    <button id="btn-welcome">Ver de qué se trata <span>→</span></button>
+    <div id="welcome-sub">no necesitás registrarte · no guardamos nada</div>
+  </div>
+</div>
+
+<!-- LANDING — terminal de la IA -->
+<div id="landing" style="display:none">
   <div id="landing-inner">
     <div id="landing-logo" data-text="GLITCH">GL<span>I</span>TCH</div>
     <div id="landing-tag">el juego que te odia</div>
@@ -2553,6 +2726,17 @@ function runLanding() {
   });
 }
 
+document.getElementById('btn-welcome').addEventListener('click', () => {
+  const welcome = document.getElementById('welcome');
+  const landing = document.getElementById('landing');
+  welcome.classList.add('hide');
+  setTimeout(() => {
+    welcome.style.display = 'none';
+    landing.style.display = 'flex';
+    runLanding();
+  }, 350);
+});
+
 document.getElementById('btn-start').addEventListener('click', () => {
   const landing = document.getElementById('landing');
   landing.classList.add('hide');
@@ -2568,22 +2752,14 @@ function startGame() {
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 window.addEventListener('load', async () => {
-  // Si MP redirigió de vuelta con pago aprobado, verificar con el backend
   if (checkPaymentRedirect()) {
     await checkExistingPayment();
     if (paid) {
-      // Mostrar confirmación y arrancar juego directamente
-      runLanding();
-      // Pequeño delay para que la landing se vea
-      setTimeout(() => {
-        document.getElementById('btn-start-txt').textContent = 'Pago confirmado — Jugar';
-      }, 500);
-      return;
+      document.getElementById('btn-start-txt').textContent = 'Pago confirmado — Jugar';
     }
   }
-  // Verificar si ya pagó en sesión anterior
   await checkExistingPayment();
-  runLanding();
+  // Welcome screen se muestra sola — el usuario arranca el flujo
 });
 </script>
 </body>
