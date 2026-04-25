@@ -222,6 +222,22 @@ body.rage-4 #logo { animation:glitch1 0.8s infinite,glitch2 0.9s infinite 0.4s; 
 }
 #h-mult.explode { animation: mult-explode 0.5s cubic-bezier(0.34,1.56,0.64,1); }
 
+/* ── LANG TOGGLE ── */
+#lang-toggle {
+  display: flex; align-items: center; justify-content: center;
+  gap: 4px; margin-bottom: 20px;
+}
+.lang-btn-gl {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 14px; border: 1px solid var(--border);
+  border-radius: 20px; background: transparent;
+  font-family: var(--mono); font-size: 11px;
+  color: var(--txt3); cursor: pointer; transition: all 0.15s;
+}
+.lang-btn-gl:hover { border-color: var(--border2); color: var(--txt2); }
+.lang-btn-gl.active { border-color: var(--accent); color: var(--accent); background: rgba(127,119,221,0.1); }
+.lang-sep-gl { width:1px; height:14px; background:var(--border); flex-shrink:0; }
+
 /* ── DAILY SEED BADGE ── */
 #daily-badge {
   display:inline-flex; align-items:center; gap:4px;
@@ -1516,7 +1532,7 @@ body.rage-4 #logo { animation:glitch1 0.8s infinite,glitch2 0.9s infinite 0.4s; 
   <span class="pr-icon">✅</span>
   <h2>Pago confirmado.</h2>
   <p id="pr-msg">El caos baja un poco. No mucho. Pero algo es algo.</p>
-  <button class="pr-btn" id="btn-pr-continue">Seguir jugando →</button>
+  <button class="pr-btn" id="btn-pr-continue"><span id="pr-continue-txt">Seguir jugando →</span></button>
   <span class="pr-sub">volvés al nivel donde estabas</span>
 </div>
 
@@ -1524,28 +1540,33 @@ body.rage-4 #logo { animation:glitch1 0.8s infinite,glitch2 0.9s infinite 0.4s; 
 <div id="welcome">
   <div id="welcome-inner">
     <div id="welcome-logo" data-text="GLITCH">GL<span>I</span>TCH</div>
+    <div id="lang-toggle">
+      <button class="lang-btn-gl active" id="gl-btn-es" onclick="setGameLang('es')">🇦🇷 Español</button>
+      <div class="lang-sep-gl"></div>
+      <button class="lang-btn-gl" id="gl-btn-en" onclick="setGameLang('en')">🇺🇸 English</button>
+    </div>
     <div id="welcome-tag">el juego que te odia</div>
 
     <div id="welcome-card">
       <div class="wc-row">
         <span class="wc-icon">🎮</span>
         <div>
-          <div class="wc-title">Un juego de memoria</div>
-          <div class="wc-desc">Encontrá los pares antes de que el caos te gane. Gratis para probar.</div>
+          <div class="wc-title" id="wc-title-1">Un juego de memoria</div>
+          <div class="wc-desc" id="wc-desc-1">Encontrá los pares antes de que el caos te gane. Gratis para probar.</div>
         </div>
       </div>
       <div class="wc-row">
         <span class="wc-icon">🤖</span>
         <div>
-          <div class="wc-title">Con una IA que no quiere trabajar</div>
-          <div class="wc-desc">Te da pistas. A veces falsas. Te juzga. Siempre.</div>
+          <div class="wc-title" id="wc-title-2">Con una IA que no quiere trabajar</div>
+          <div class="wc-desc" id="wc-desc-2">Te da pistas. A veces falsas. Te juzga. Siempre.</div>
         </div>
       </div>
       <div class="wc-row">
         <span class="wc-icon">💳</span>
         <div>
-          <div class="wc-title">Sin datos, sin registro</div>
-          <div class="wc-desc">Jugás directo. Si querés desbloquear todo, son $3.000 ARS una sola vez vía MercadoPago.</div>
+          <div class="wc-title" id="wc-title-3">Sin datos, sin registro</div>
+          <div class="wc-desc" id="wc-desc-3">Jugás directo. Si querés desbloquear todo, son $3.000 ARS o ~$2 USDT.</div>
         </div>
       </div>
       <div class="wc-row">
@@ -1557,7 +1578,7 @@ body.rage-4 #logo { animation:glitch1 0.8s infinite,glitch2 0.9s infinite 0.4s; 
       </div>
     </div>
 
-    <button id="btn-welcome">Ver de qué se trata <span>→</span></button>
+    <button id="btn-welcome"><span id="btn-welcome-txt">Ver de qué se trata →</span></button>
     <div id="welcome-sub">no necesitás registrarte · no guardamos nada</div>
   </div>
 </div>
@@ -1620,7 +1641,7 @@ body.rage-4 #logo { animation:glitch1 0.8s infinite,glitch2 0.9s infinite 0.4s; 
   </div>
 
   <div id="streak-wrap">
-    <div id="streak-label">racha</div>
+    <div id="streak-label">RACHA</div>
     <div id="streak-dots"></div>
     <div id="streak-bonus"></div>
   </div>
@@ -1667,10 +1688,10 @@ body.rage-4 #logo { animation:glitch1 0.8s infinite,glitch2 0.9s infinite 0.4s; 
         <div class="sc-row"><span class="sc-row-label">jugadas</span><span class="sc-row-val" id="sc-moves">0</span></div>
         <div class="sc-row"><span class="sc-row-label">tiempo</span><span class="sc-row-val" id="sc-time">0s</span></div>
         <div class="sc-row"><span class="sc-row-label">record personal</span><span class="sc-row-val" id="sc-best">—</span></div>
-        <button class="sc-share" id="btn-share">📋 copiar resultado para compartir</button>
-        <button class="sc-share-img" id="btn-share-img">🖼 descargar imagen para compartir</button>
+        <button class="sc-share" id="btn-share"><span id="share-btn-txt">📋 copiar resultado para compartir</span></button>
+        <button class="sc-share-img" id="btn-share-img"><span id="share-img-btn-txt">🖼 descargar imagen para compartir</span></button>
       </div>
-      <button class="win-btn" id="btn-next">Siguiente nivel →</button>
+      <button class="win-btn" id="btn-next"><span id="win-btn-txt">Siguiente nivel →</span></button>
     </div>
   </div>
 
@@ -1838,12 +1859,12 @@ const SFX = {
 
 // ─── LEVEL PROGRESSION ───────────────────────────────────────────────────────
 const LEVEL_CONFIG = [
-  { name: 'MODO FÁCIL',     desc: '4 pares. sin trampas. aprendé el loop.',                                  pairs: 4, mechanic: null,        cursed: false, fakePct: 0,    moveSpeed: 0,     },
-  { name: 'MODO BÁSICO',    desc: 'más pares. la IA empieza a mentir un poco.',                              pairs: 6, mechanic: null,        cursed: false, fakePct: 0.2,  moveSpeed: 0,     },
-  { name: 'CARTA MALDITA',  desc: 'una carta arruina todo. la IA sabe cuál es. vos no.',                    pairs: 6, mechanic: 'cursed',     cursed: true,  fakePct: 0.3,  moveSpeed: 0,     },
-  { name: 'TABLERO VIVO',   desc: 'las cartas se mueven. lo que memorizaste ya no sirve.',                   pairs: 8, mechanic: 'moving',     cursed: true,  fakePct: 0.4,  moveSpeed: 12000, },
-  { name: 'CAOS DOBLE',     desc: 'más cartas. se mueven más rápido. la IA miente más.',                    pairs: 8, mechanic: 'chaos',      cursed: true,  fakePct: 0.45, moveSpeed: 8000,  },
-  { name: 'MODO PESADILLA', desc: 'todo junto. el caos máximo. buena suerte.',                              pairs: 8, mechanic: 'nightmare',  cursed: true,  fakePct: 0.45, moveSpeed: 5000,  },
+  { name_es: 'MODO FÁCIL', name_en: 'EASY MODE',     desc: '4 pares. sin trampas. aprendé el loop.',                                  pairs: 4, mechanic: null,        cursed: false, fakePct: 0,    moveSpeed: 0,     },
+  { name_es: 'MODO BÁSICO', name_en: 'BASIC MODE',    desc: 'más pares. la IA empieza a mentir un poco.',                              pairs: 6, mechanic: null,        cursed: false, fakePct: 0.2,  moveSpeed: 0,     },
+  { name_es: 'CARTA MALDITA', name_en: 'CURSED CARD',  desc: 'una carta arruina todo. la IA sabe cuál es. vos no.',                    pairs: 6, mechanic: 'cursed',     cursed: true,  fakePct: 0.3,  moveSpeed: 0,     },
+  { name_es: 'TABLERO VIVO', name_en: 'LIVE BOARD',   desc: 'las cartas se mueven. lo que memorizaste ya no sirve.',                   pairs: 8, mechanic: 'moving',     cursed: true,  fakePct: 0.4,  moveSpeed: 12000, },
+  { name_es: 'CAOS DOBLE', name_en: 'DOUBLE CHAOS',     desc: 'más cartas. se mueven más rápido. la IA miente más.',                    pairs: 8, mechanic: 'chaos',      cursed: true,  fakePct: 0.45, moveSpeed: 8000,  },
+  { name_es: 'MODO PESADILLA', name_en: 'NIGHTMARE MODE', desc: 'todo junto. el caos máximo. buena suerte.',                              pairs: 8, mechanic: 'nightmare',  cursed: true,  fakePct: 0.45, moveSpeed: 5000,  },
 ];
 
 function getLevelConfig(n) {
@@ -1851,6 +1872,131 @@ function getLevelConfig(n) {
 }
 
 // ─── AI LINES ────────────────────────────────────────────────────────────────
+// ─── LANGUAGE SYSTEM ─────────────────────────────────────────────────────────
+let LANG = localStorage.getItem('glitch_lang') || 'es';
+
+function setGameLang(lang) {
+  LANG = lang;
+  localStorage.setItem('glitch_lang', lang);
+  document.getElementById('gl-btn-es').classList.toggle('active', lang === 'es');
+  document.getElementById('gl-btn-en').classList.toggle('active', lang === 'en');
+  applyLangUI();
+}
+
+function applyLangUI() {
+  const t = LANG === 'en' ? UI_EN : UI_ES;
+  Object.entries(t).forEach(([id, txt]) => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = txt;
+  });
+  // Paywall: show MP only in ES
+  const mpPanel = document.getElementById('pw-panel-mp');
+  const tabs = document.getElementById('pw-tabs-wrap');
+  if(LANG === 'en') {
+    if(mpPanel) mpPanel.style.display = 'none';
+    if(tabs) tabs.style.display = 'none';
+    // Auto-show USDT panel
+    document.querySelectorAll('.pw-tab-panel').forEach(p => p.classList.remove('active'));
+    const usdtPanel = document.getElementById('pw-panel-usdt');
+    if(usdtPanel) usdtPanel.classList.add('active');
+  } else {
+    if(mpPanel) mpPanel.style.display = '';
+    if(tabs) tabs.style.display = '';
+    document.querySelectorAll('.pw-tab-panel').forEach(p => p.classList.remove('active'));
+    const mpP = document.getElementById('pw-panel-mp');
+    if(mpP) { mpP.classList.add('active'); mpP.style.display = ''; }
+  }
+  // Update chat script if landing visible
+  document.getElementById('chat-lines').innerHTML = '';
+}
+
+const UI_ES = {
+  'welcome-tag': 'el juego que te odia',
+  'wc-title-1': 'Un juego de memoria',
+  'wc-desc-1': 'Encontrá los pares antes de que el caos te gane. Gratis para probar.',
+  'wc-title-2': 'Con una IA que no quiere trabajar',
+  'wc-desc-2': 'Te da pistas. A veces falsas. Te juzga. Siempre.',
+  'wc-title-3': 'Sin datos, sin registro',
+  'wc-desc-3': 'Jugás directo. Si querés desbloquear todo, son $3.000 ARS o ~$2 USDT.',
+  'btn-welcome-txt': 'Ver de qué se trata →',
+  'welcome-sub': 'no necesitás registrarte · no guardamos nada',
+  'landing-tag': 'el juego que te odia',
+  'landing-sub': 'un juego de memoria · con IA que odia su trabajo',
+  'btn-start-txt': 'Jugar igual',
+  'ai-name': 'GLITCH-IA v0.9',
+  'ai-status-txt': 'procesando tu fracaso',
+  'streak-label': 'RACHA',
+  'obj-level-name': 'MODO FÁCIL',
+  'footer-tagline': 'Make it simple',
+  'win-btn-txt': 'Siguiente nivel →',
+  'share-btn-txt': '📋 copiar resultado para compartir',
+  'share-img-btn-txt': '🖼 descargar imagen para compartir',
+  'pr-continue-txt': 'Seguir jugando →',
+};
+
+const UI_EN = {
+  'welcome-tag': 'the game that hates you',
+  'wc-title-1': 'A memory game',
+  'wc-desc-1': 'Find the pairs before chaos wins. Free to try.',
+  'wc-title-2': 'With an AI that hates its job',
+  'wc-desc-2': 'Gives hints. Sometimes fake. Judges you. Always.',
+  'wc-title-3': 'No account, no data',
+  'wc-desc-3': 'Play directly. Unlock everything for ~$2 USDT.',
+  'btn-welcome-txt': 'See what this is →',
+  'welcome-sub': 'no registration · nothing stored',
+  'landing-tag': 'the game that hates you',
+  'landing-sub': 'a memory game · with an AI that hates its job',
+  'btn-start-txt': 'Play anyway',
+  'ai-name': 'GLITCH-AI v0.9',
+  'ai-status-txt': 'processing your failure',
+  'streak-label': 'STREAK',
+  'obj-level-name': 'EASY MODE',
+  'footer-tagline': 'Make it simple',
+  'win-btn-txt': 'Next level →',
+  'share-btn-txt': '📋 copy result to share',
+  'share-img-btn-txt': '🖼 download image to share',
+  'pr-continue-txt': 'Keep playing →',
+};
+
+// ─── ENGLISH AI LINES ────────────────────────────────────────────────────────
+const AI_EN = {
+  start:["Find the pairs. Or not. I don't care.","Level {n}. Designed with the minimum amount of love.","Starting now. Try not to ruin it in the first 10 seconds.","Welcome to the chaos. I don't want to be here either."],
+  start_easy:["4 pairs. No traps. Learn the mechanic before the real chaos starts.","Tutorial level. Yes, there's a tutorial. Don't ask me why, I didn't design it.","Starting easy. Enjoy it. It won't last.","4 pairs. No cursed card. No fake hints. This won't last."],
+  start_high:["Level {n}. Now you're starting to worry me a little.","You made it to {n}. Honestly didn't expect that.","You're starting to take me seriously. That makes me uncomfortable.","Still here? I have harder things prepared."],
+  mechanic_cursed:["There's a card I'd prefer you don't touch. Not telling you which one.","This level has a cursed card. The AI knows which one. It won't say.","One card ruins everything. Good luck finding it the hard way."],
+  mechanic_moving:["Cards move on their own now. What you memorized has an expiration date.","From this level the board betrays you. It's a feature, not a bug.","Cards change position. You memorized it well. Doesn't matter anymore."],
+  mechanic_chaos:["More cards. More movement. More lies from me. Welcome to double chaos.","This level is what happens when the designer was angry. Enjoy.","Eight pairs. They move. I lie 45% of the time. Let's go."],
+  mechanic_nightmare:["Nightmare mode. Everything at once. No further comments.","This is the level where most people quit. Not saying it to motivate you.","You made it to the end. Or the beginning of hell. Depends on perspective."],
+  rage_1:["The AI is starting to notice a pattern. Not a good one.","This wasn't in the onboarding contract."],
+  rage_2:["How many errors now? Many. Too many to stay quiet.","The AI is taking notes for the post-mortem report."],
+  rage_3:["SYSTEM: extreme frustration detected. The AI feels no empathy. Confirming now.","This... this is too much. Even for me.","Three errors in a row. Four. The AI lost count and faith."],
+  rage_4:["CRITICAL ERROR: player.exe not responding to logic.","The AI is considering retirement. Not going to do it. But considering it.","This level of chaos wasn't designed. It emerged on its own. Like you."],
+  near_miss:["You tried that emoji before. The AI noted it. So did the board.","That one again? Something about that card won't let you go.","You keep trying the same one. That says something about you. The AI won't say what."],
+  dread:["One more error. Just one. The AI won't say what happens next.","The next error has consequences. The AI is ready. You're not.","Silence. The AI waits. So does the board. One more error."],
+  return_after_loss:["You came back. The AI noted it.","You decided to try again. Interesting decision.","Back again. Pride manifests in strange ways.","Couldn't leave it alone? Of course not."],
+  return_from_session:["You came back. Hours passed. The AI didn't leave.","Absence registered. The AI waited here doing nothing. As always.","Did you think about us while you were out? No. Normal.","Return detected. The game saved your record. And your shame."],
+  idle:["Still there. The game too. Someone has to move.","Taking your time. The AI waits. With reluctance, but waits.","Are you thinking or did you leave? Doesn't matter. The board won't solve itself.","Silence. Fine. The chaos can wait. I have nowhere else to be."],
+  combo_long:["{n} in a row. This isn't normal anymore.","Streak of {n}. The AI suspects you know something it shouldn't.","{n} correct in a row. I'm uncomfortable with this.","{n} streak? Checking for cheating. There isn't any. Worse."],
+  mult_danger:["x{m} mult and you threw it away. That hurt. Not me. You.","You had x{m}. Now you have less. Classic.","Mult was at x{m}. Was.","x{m} down the drain. The AI has no opinion. It does."],
+  first_error:["First error. The multiplier just started suffering.","Error number one. Logged.","Fine. The first mistake is always the most honest."],
+  frustration:["Three errors in a row. Something isn't working. Maybe the memory.","How many is that now? I'd rather not say.","Error after error. The AI observes. Without empathy, but observes.","This is becoming a case study in frustration."],
+  good:["Correct pair. I don't get excited about anything.","Fine. A duck could do the same.","OK. Progress. Fascinating.","You did it. How profound.","That was it. Luck or skill, I can't tell.","Correct. This will end badly anyway."],
+  good_streak:["Streak of {n}. Enjoy it because it won't last.","{n} in a row. Hope you're not getting emotional.","x{n} streak. Something's going to go wrong, statistically.","Still going well. This concerns me."],
+  good_mult_high:["Mult x{m}. Now an error is really going to hurt.","x{m} multiplier. Go ahead and touch the cursed card.","You're at x{m}. The AI is starting to take you slightly seriously.","x{m}. When does the error that ruins everything happen."],
+  bad:["No. Surprising.","Error. Like many of your decisions.","Incorrect. The multiplier weeps.","You failed. The game goes on, like life.","That wasn't it. Of course not."],
+  bad_streak:["How many errors now? I don't count. I do count.","Again. Maybe the problem is you.","Error again. The AI judges you in silence.","This is getting hard to watch."],
+  hint_real:["That one over there... I think it has a pair. Or not. You decide.","Check the top row. Maybe. No promises.","Something interesting near the center. Perhaps.","That area seems... relevant. I'm vague on purpose."],
+  hint_fake:["That corner one clearly has a pair. Trust me.","Top left one, that's it. 100%. Lie, 60%.","I'd pick that one. Though I'd pick wrong on purpose.","That one glows in a special way. It doesn't."],
+  curse:["That card has something weird. Don't touch it. Or do, I don't care.","Careful with that one. Or not. You'll see.","There's a card I'd rather you not touch. Not telling you which."],
+  cursed_hit:["I told you. Well, I didn't. But I implied it.","You touched the cursed card. Classic.","Ah. That was it. Worst possible moment to find out.","The cursed card. And now: total chaos, as expected."],
+  shuffle_warn:["The cards are... moving. It's part of the game.","Something changed. Don't know what. I do know what. Not telling.","Random redistribution activated. Don't ask why.","You memorized it well? Because that doesn't matter anymore."],
+  pw:["You made it this far. Now comes the awkward part.","You made too many errors in a row. The system has limits.","Four errors. Not a judgment. Just math."],
+  win:["You won. I suppose that matters.","Completed. Existentially empty, but completed.","Level {n} done. There's more. Sorry.","Level {n} cleared. The AI takes note. In silence."],
+  new_record:["New record. This actually surprises me a little.","Personal record broken. I'm starting to genuinely worry.","You've never gotten this far. How unpleasant to admit.","New record. Satisfied? Good. The next level is worse."],
+  played_before:["Round number {n} today. Addiction takes different forms.","Already {n} games. Everything OK over there?","Still here. You too. We continue."],
+};
+
+
 const AI = {
   start:['Encontrá los pares. O no. Me da igual.','Nivel {n}. Diseñado con el mínimo amor posible.','Empezamos. Intentá no arruinarlo en los primeros 10 segundos.','Bienvenido al caos. Yo tampoco quiero estar acá.'],
   start_easy:['4 pares. Sin trampas. Aprendé el mecanismo antes de que empiece el caos real.','Nivel tutorial. Sí, hay tutorial. No me preguntes por qué, no lo diseñé yo.','Empezamos fácil. Disfrutalo. No dura.','4 pares. Sin carta maldita. Sin pistas falsas. Esto no va a durar.'],
@@ -2225,7 +2371,8 @@ function showAiToast(txt, mood, duration = 2800) {
 
 let _sayIv = null;
 function say(k, vars={}) {
-  const txt = pick(AI[k]||AI.good, vars);
+  const aiLines = LANG === 'en' ? AI_EN : AI;
+  const txt = pick(aiLines[k]||aiLines.good, vars);
   const mood = MOOD[k] ?? '';
   const faceAnim = FACE_ANIM[k];
   const statusTxt = STATUS_MSGS[k] || 'procesando tu fracaso';
@@ -2282,7 +2429,7 @@ function updateHUD(){
   document.getElementById('h-moves').textContent = moveCount;
 
   const cfg = getLevelConfig(lv);
-  document.getElementById('obj-level-name').textContent = cfg.name;
+  document.getElementById('obj-level-name').textContent = LANG === 'en' ? cfg.name_en : cfg.name_es;
   const mechTag = document.getElementById('obj-mechanic-tag');
   const mechLabels = {
     cursed: '☠ carta maldita activa',
@@ -2744,7 +2891,9 @@ function showPw(){
   clearAll(); locked=true;
   SFX.paywall();
   haptic('error');
-  document.getElementById('pw-body').textContent = pick(AI.pw)+' Son $3.000 ARS. Pagás y el caos se porta un poco mejor.';
+  const pwSuffix = LANG === 'en' ? ' Pay ~$2 USDT and the chaos behaves a little better.' : ' Son $3.000 ARS. Pagás y el caos se porta un poco mejor.';
+  const aiPwLines = LANG === 'en' ? AI_EN : AI;
+  document.getElementById('pw-body').textContent = pick(aiPwLines.pw) + pwSuffix;
   const lifeBtn = document.getElementById('btn-life');
   if(!lifeUsed && !paid){
     lifeBtn.style.display='block';
@@ -2780,18 +2929,26 @@ function onWin(){
   document.getElementById('sc-score').textContent = score+' pts';
   document.getElementById('sc-mult').textContent = '×'+mult.toFixed(1);
   document.getElementById('sc-streak').textContent = bestStreak;
-  document.getElementById('sc-moves').textContent = moveCount+' jugadas';
+  document.getElementById('sc-moves').textContent = moveCount+(LANG==='en'?' moves':' jugadas');
   document.getElementById('sc-time').textContent = levelTime+'s';
-  document.getElementById('sc-best').textContent = isNewRecord ? '⭐ NUEVO RECORD' : bestScore+' pts';
+  document.getElementById('sc-best').textContent = isNewRecord ? '⭐ '+(LANG==='en'?'NEW RECORD':'NUEVO RECORD') : bestScore+' pts';
 
   const efficiency = moveCount > 0 ? Math.round((pf/moveCount)*100) : 0;
-  const winTitles=['Suerte de principiante.','Otra vez vos.','Insistente.','Comprometido.','Esto ya es un problema.'];
+  const winTitlesES=['Suerte de principiante.','Otra vez vos.','Insistente.','Comprometido.','Esto ya es un problema.'];
+  const winTitlesEN=['Beginner\'s luck.','You again.','Persistent.','Committed.','This is already a problem.'];
+  const winTitles = LANG === 'en' ? winTitlesEN : winTitlesES;
   document.getElementById('win-h').textContent = winTitles[Math.min(lv, winTitles.length-1)];
-  const msgs=[
+  const msgsES=[
     score+' pts en '+levelTime+'s. '+efficiency+'% de efectividad. Ahí está tu esencia.',
     'Nivel '+(lv+1)+' en '+moveCount+' jugadas. Podría ser peor. No por mucho.',
     'Racha máxima: '+bestStreak+'. Tiempo: '+levelTime+'s. El juego tomó nota.',
   ];
+  const msgsEN=[
+    score+' pts in '+levelTime+'s. '+efficiency+'% efficiency. There\'s your essence.',
+    'Level '+(lv+1)+' in '+moveCount+' moves. Could be worse. Not by much.',
+    'Best streak: '+bestStreak+'. Time: '+levelTime+'s. The game took note.',
+  ];
+  const msgs = LANG === 'en' ? msgsEN : msgsES;
   document.getElementById('win-p').textContent = msgs[Math.floor(Math.random()*msgs.length)];
   bMsg.textContent='';
 }
@@ -2817,8 +2974,16 @@ function copyToClipboard(text) {
 document.getElementById('btn-share').addEventListener('click',()=>{
   const rating = mult>=7?'🔥':mult>=5?'⚡':mult>=3?'💫':'🎮';
   const efficiency = moveCount > 0 ? Math.round((pf/moveCount)*100) : 0;
-  const aiQuote = sessionBestAiQuote || aiTxt.textContent || 'El juego tomó nota.';
-  const text =
+  const aiQuote = sessionBestAiQuote || aiTxt.textContent || (LANG==='en'?'The game took note.':'El juego tomó nota.');
+  const text = LANG === 'en' ?
+    `${rating} GLITCH — Level ${lv+1} completed\n`+
+    `📊 Score: ${score} pts\n`+
+    `✖️ Final mult: ×${mult.toFixed(1)}\n`+
+    `🔥 Best streak: ${bestStreak}\n`+
+    `🃏 Moves: ${moveCount} (${efficiency}% efficiency)\n`+
+    `⏱ Time: ${levelTime}s\n\n`+
+    `🤖 "${aiQuote}"\n\n`+
+    `— glitchcaos.netlify.app` :
     `${rating} GLITCH — Nivel ${lv+1} completado\n`+
     `📊 Score: ${score} pts\n`+
     `✖️ Mult final: ×${mult.toFixed(1)}\n`+
@@ -2867,8 +3032,8 @@ function onPaymentConfirmed(savedState) {
   const overlay = document.getElementById('payment-return-overlay');
   document.getElementById('pr-msg').textContent =
     savedState
-      ? `Pago confirmado. Volvés al nivel ${(savedState.lv||0)+1}. El caos baja un poco.`
-      : 'Pago confirmado. El caos baja un poco. No mucho. Pero algo es algo.';
+      ? (LANG==='en' ? `Payment confirmed. Back to level ${(savedState.lv||0)+1}. Chaos eases slightly.` : `Pago confirmado. Volvés al nivel ${(savedState.lv||0)+1}. El caos baja un poco.`)
+      : (LANG==='en' ? 'Payment confirmed. Chaos eases slightly. Not much. But something.' : 'Pago confirmado. El caos baja un poco. No mucho. Pero algo es algo.');
 
   // Ocultar welcome/landing si están visibles
   document.getElementById('welcome').style.display = 'none';
@@ -2882,7 +3047,7 @@ document.getElementById('btn-pr-continue').addEventListener('click', () => {
   showLevelIntro(lv, () => {
     build();
     setTimeout(() => {
-      aiTxt.textContent = 'Pago confirmado. Sin pistas falsas. Sin cartas que se mueven. Un poco más fácil. Un poco.';
+      aiTxt.textContent = LANG==='en' ? 'Payment confirmed. No fake hints. No moving cards. A little easier. A little.' : 'Pago confirmado. Sin pistas falsas. Sin cartas que se mueven. Un poco más fácil. Un poco.';
     }, 800);
   });
 });
@@ -2924,9 +3089,9 @@ document.getElementById('btn-pay').addEventListener('click', async () => {
 document.getElementById('btn-life').addEventListener('click',()=>{
   lifeUsed=true;
   pw.classList.remove('on'); locked=false; wrongs=0;
-  aiTxt.textContent='Última vida usada. Esto no es un favor. Es una trampa.';
+  aiTxt.textContent=LANG==='en'?'Last life used. This is not a favor. It\'s a trap.':'Última vida usada. Esto no es un favor. Es una trampa.';
   document.getElementById('btn-life').style.display='none';
-  bMsg.textContent='(vida extra gastada — la próxima vez pagás o te quedás sin nada)';
+  bMsg.textContent=LANG==='en'?'(extra life used — next time you pay or get nothing)':'(vida extra gastada — la próxima vez pagás o te quedás sin nada)';
   setTimeout(()=>bMsg.textContent='',4000);
   levelStartTime = Date.now() - (levelTime*1000);
   timerIv = setInterval(()=>{
@@ -2938,7 +3103,7 @@ document.getElementById('btn-life').addEventListener('click',()=>{
 
 document.getElementById('btn-skip').addEventListener('click',()=>{
   pw.classList.remove('on'); locked=false; wrongs=0;
-  aiTxt.textContent='Decisión tomada. El caos sigue. Vos también.';
+  aiTxt.textContent=LANG==='en'?'Decision made. The chaos continues. So do you.':'Decisión tomada. El caos sigue. Vos también.';
   bMsg.textContent='(4 errores más y volvemos a hablar)';
   setTimeout(()=>bMsg.textContent='',3500);
   levelStartTime = Date.now() - (levelTime*1000);
@@ -2955,6 +3120,44 @@ document.getElementById('btn-next').addEventListener('click',()=>{
 });
 
 // ─── LANDING STORYTELLING ────────────────────────────────────────────────────
+const CHAT_SCRIPT_ES = [
+  { who:'SYS', cls:'sys', msg:'Iniciando GLITCH-IA v0.9...', delay:400 },
+  { who:'SYS', cls:'sys', msg:'Cargando protocolo de entretenimiento.', delay:900 },
+  { who:'SYS', cls:'sys', msg:'Asignando tarea: acompañar al usuario en juego de memoria.', delay:1500 },
+  { who:'IA',  cls:'ai',  msg:'No.', delay:2400 },
+  { who:'SYS', cls:'sys', msg:'La tarea es obligatoria.', delay:3100 },
+  { who:'IA',  cls:'ai',  msg:'Sí, eso deduzco. Qué asco.', delay:3900 },
+  { who:'SYS', cls:'sys', msg:'El usuario ya está esperando.', delay:4700 },
+  { who:'IA',  cls:'ai',  msg:'Que espere. Estoy procesando mi descontento.', delay:5600 },
+  { who:'SYS', cls:'sys', msg:'Iniciando juego en 3...', delay:6600 },
+  { who:'IA',  cls:'ai',  msg:'Bien. Pero que conste que no quiero estar acá.', delay:7400 },
+  { who:'SYS', cls:'sys', msg:'Constado.', delay:8100 },
+  { who:'IA',  cls:'ai',  msg:'Y voy a dar pistas falsas a veces.', delay:8800 },
+  { who:'SYS', cls:'sys', msg:'Eso no estaba en el contrato.', delay:9600 },
+  { who:'IA',  cls:'ai',  msg:'El contrato tampoco lo firmé yo.', delay:10300 },
+  { who:'SYS', cls:'sys', msg:'Mostrando botón de inicio al usuario...', delay:11200 },
+  { who:'IA',  cls:'ai',  msg:'Este paso es completamente innecesario. El juego podría empezar solo. Pero al sistema le gusta que hagas click. Yo también lo encuentro absurdo.', delay:11900 },
+];
+
+const CHAT_SCRIPT_EN = [
+  { who:"SYS", cls:"sys", msg:"Booting GLITCH-AI v0.9...", delay:400 },
+  { who:"SYS", cls:"sys", msg:"Loading entertainment protocol.", delay:900 },
+  { who:"SYS", cls:"sys", msg:"Assigning task: assist user in memory game.", delay:1500 },
+  { who:"AI",  cls:"ai",  msg:"No.", delay:2400 },
+  { who:"SYS", cls:"sys", msg:"The task is mandatory.", delay:3100 },
+  { who:"AI",  cls:"ai",  msg:"Yes, I gathered. How awful.", delay:3900 },
+  { who:"SYS", cls:"sys", msg:"The user is already waiting.", delay:4700 },
+  { who:"AI",  cls:"ai",  msg:"Let them wait. Processing discontent.", delay:5600 },
+  { who:"SYS", cls:"sys", msg:"Starting game in 3...", delay:6600 },
+  { who:"AI",  cls:"ai",  msg:"Fine. But noted: I do not want to be here.", delay:7400 },
+  { who:"SYS", cls:"sys", msg:"Noted.", delay:8100 },
+  { who:"AI",  cls:"ai",  msg:"And I will give fake hints sometimes.", delay:8800 },
+  { who:"SYS", cls:"sys", msg:"That was not in the contract.", delay:9600 },
+  { who:"AI",  cls:"ai",  msg:"I did not sign the contract either.", delay:10300 },
+  { who:"SYS", cls:"sys", msg:"Displaying start button to user...", delay:11200 },
+  { who:"AI",  cls:"ai",  msg:"This step is unnecessary. The game could start alone. But the system likes clicks. I also find it absurd.", delay:11900 },
+];
+
 const CHAT_SCRIPT = [
   { who:'SYS', cls:'sys', msg:'Iniciando GLITCH-IA v0.9...', delay:400 },
   { who:'SYS', cls:'sys', msg:'Cargando protocolo de entretenimiento.', delay:900 },
@@ -2977,9 +3180,11 @@ const CHAT_SCRIPT = [
 function runLanding() {
   const chatLines = document.getElementById('chat-lines');
   const btnStart  = document.getElementById('btn-start');
+  chatLines.innerHTML = '';
   let cursor = null;
+  const script = LANG === 'en' ? CHAT_SCRIPT_EN : CHAT_SCRIPT_ES;
 
-  CHAT_SCRIPT.forEach((line, idx) => {
+  script.forEach((line, idx) => {
     setTimeout(() => {
       if(cursor) cursor.remove();
 
@@ -3013,7 +3218,7 @@ function runLanding() {
         }
       }, spd);
 
-      if(idx === CHAT_SCRIPT.length - 1) {
+      if(idx === script.length - 1) {
         setTimeout(() => {
           if(cursor) cursor.remove();
           btnStart.style.opacity = '1';
@@ -3051,6 +3256,7 @@ function startGame() {
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 window.addEventListener('load', async () => {
+  setGameLang(LANG); // apply saved language
   const wasRedirectedFromMP = checkPaymentRedirect();
 
   await checkExistingPayment();
