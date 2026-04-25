@@ -733,6 +733,25 @@ body {
 }
 .pw-skip:hover { color: var(--txt2); }
 
+/* ── PAYMENT TABS ── */
+.pw-tabs { display:flex; gap:4px; margin-bottom:14px; background:var(--bg3); border-radius:8px; padding:3px; }
+.pw-tab { flex:1; padding:7px 4px; border:none; background:transparent; font-family:var(--sans); font-size:11px; font-weight:700; color:var(--txt3); cursor:pointer; border-radius:6px; transition:all 0.15s; letter-spacing:-0.01em; }
+.pw-tab.active { background:var(--bg2); color:var(--txt); border:1px solid var(--border2); }
+.pw-tab-panel { display:none; }
+.pw-tab-panel.active { display:block; }
+
+/* USDT panel */
+.pw-usdt-box { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:10px 10px 8px; margin-bottom:10px; }
+.pw-usdt-label { font-size:9px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); font-weight:700; margin-bottom:4px; display:block; }
+.pw-usdt-addr { font-family:var(--mono); font-size:9.5px; color:var(--txt2); word-break:break-all; line-height:1.5; margin-bottom:6px; }
+.pw-usdt-copy { width:100%; padding:6px; border-radius:5px; background:rgba(127,119,221,0.12); border:1px solid rgba(127,119,221,0.25); color:var(--accent); font-family:var(--sans); font-size:11px; font-weight:700; cursor:pointer; transition:all 0.15s; }
+.pw-usdt-copy:hover { background:rgba(127,119,221,0.22); }
+.pw-usdt-copy.copied { background:rgba(74,222,128,0.12); border-color:rgba(74,222,128,0.25); color:var(--green); }
+.pw-usdt-net { font-size:9px; color:var(--txt3); margin-top:5px; display:block; text-align:center; }
+.pw-btn-usdt-confirm { width:100%; padding:11px; border-radius:8px; background:var(--green); color:#000; border:none; font-size:13px; font-weight:700; font-family:var(--sans); cursor:pointer; margin-bottom:8px; transition:background 0.15s, transform 0.1s; opacity:0.4; pointer-events:none; }
+.pw-btn-usdt-confirm.ready { opacity:1; pointer-events:auto; }
+.pw-btn-usdt-confirm.ready:hover { background:#22c55e; transform:translateY(-1px); }
+
 .win-box {
   text-align: center;
   padding: 20px 0;
@@ -1505,15 +1524,42 @@ body {
         <span class="pf">🤖</span>
         <h3 id="pw-title">Momento incómodo.</h3>
         <p id="pw-body">Esto es un paywall. No hay forma elegante de decirlo. Son $3.000. Menos que un café con medialunas en cualquier lado.</p>
-        <div class="pw-price">$3.000 ARS</div>
-        <span class="pw-sub">pago único · sin newsletter · sin drama</span>
-        <div class="pw-trust">
-          <span>🔒 Pago seguro vía</span>
-          <strong>MercadoPago</strong>
-          <span>· No guardamos tu tarjeta</span>
+
+        <!-- TABS -->
+        <div class="pw-tabs">
+          <button class="pw-tab active" onclick="pwSwitchTab('mp')">💳 MercadoPago</button>
+          <button class="pw-tab" onclick="pwSwitchTab('usdt')">🟢 USDT</button>
         </div>
-        <button class="pw-btn" id="btn-pay">Pagar $3.000 — MercadoPago →</button>
-        <button class="pw-btn pw-btn-life" id="btn-life" style="background:var(--orange);margin-bottom:8px;display:none">💀 Usar última vida (1 vez gratis)</button>
+
+        <!-- PANEL MP -->
+        <div class="pw-tab-panel active" id="pw-panel-mp">
+          <div class="pw-price">$3.000 ARS</div>
+          <span class="pw-sub">pago único · sin newsletter · sin drama</span>
+          <div class="pw-trust">
+            <span>🔒 Pago seguro vía</span>
+            <strong>MercadoPago</strong>
+            <span>· No guardamos tu tarjeta</span>
+          </div>
+          <button class="pw-btn" id="btn-pay">Pagar $3.000 — MercadoPago →</button>
+          <button class="pw-btn pw-btn-life" id="btn-life" style="background:var(--orange);margin-bottom:8px;display:none">💀 Usar última vida (1 vez gratis)</button>
+        </div>
+
+        <!-- PANEL USDT -->
+        <div class="pw-tab-panel" id="pw-panel-usdt">
+          <div class="pw-price" style="font-size:22px;margin-bottom:2px;">~$2 USDT</div>
+          <span class="pw-sub">equivalente · red TRC-20 · pago único</span>
+          <div class="pw-usdt-box">
+            <span class="pw-usdt-label">Dirección TRC-20</span>
+            <div class="pw-usdt-addr" id="usdt-addr">TAKobVisVDmrNRhEmvETXRGG9Uq98MXbsM</div>
+            <button class="pw-usdt-copy" id="btn-copy-usdt" onclick="copyUsdtAddr()">📋 Copiar dirección</button>
+            <span class="pw-usdt-net">Red Tron (TRC-20) · USDT solamente</span>
+          </div>
+          <button class="pw-btn-usdt-confirm" id="btn-usdt-confirm" onclick="confirmUsdtPayment()">
+            ✓ Ya envié el USDT →
+          </button>
+          <p style="font-size:9.5px;color:var(--txt3);line-height:1.5;margin-bottom:8px;">Copiá la dirección, enviá el pago y después confirmá. Lo verificamos manualmente — puede tardar unos minutos.</p>
+        </div>
+
         <div class="pw-made-by">Hecho por <a href="https://kairoinc.lat" target="_blank" rel="noopener">KAIRO</a> · Make it simple</div>
         <button class="pw-skip" id="btn-skip">Ahora no (el caos sigue igual)</button>
       </div>
@@ -2444,6 +2490,57 @@ document.getElementById('btn-pr-continue').addEventListener('click', () => {
 });
 
 // ─── BUTTONS ──────────────────────────────────────────────────────────────────
+// ── PAYMENT TABS ──────────────────────────────────────────────────────────────
+function pwSwitchTab(tab) {
+  document.querySelectorAll('.pw-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.pw-tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.pw-tab[onclick="pwSwitchTab('${tab}')"]`).classList.add('active');
+  document.getElementById(`pw-panel-${tab}`).classList.add('active');
+}
+
+function copyUsdtAddr() {
+  const addr = 'TAKobVisVDmrNRhEmvETXRGG9Uq98MXbsM';
+  const btn = document.getElementById('btn-copy-usdt');
+  const confirmBtn = document.getElementById('btn-usdt-confirm');
+  navigator.clipboard.writeText(addr).catch(() => {});
+  btn.textContent = '✓ Dirección copiada';
+  btn.classList.add('copied');
+  // Enable confirm button after copy
+  setTimeout(() => {
+    confirmBtn.classList.add('ready');
+  }, 800);
+  setTimeout(() => {
+    btn.textContent = '📋 Copiar dirección';
+    btn.classList.remove('copied');
+  }, 2500);
+}
+
+async function confirmUsdtPayment() {
+  const btn = document.getElementById('btn-usdt-confirm');
+  btn.textContent = 'Verificando...';
+  btn.style.pointerEvents = 'none';
+  // Notify backend of USDT payment claim
+  try {
+    await fetch(`${BACKEND_URL}/usdt-claim`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId: SESSION_ID, wallet: 'TAKobVisVDmrNRhEmvETXRGG9Uq98MXbsM' })
+    });
+  } catch(e) {}
+  // Optimistic unlock with pending message
+  paid = true;
+  pw.classList.remove('on');
+  locked = false;
+  aiTxt.textContent = 'Pago en revisión. Si no llegó, el caos va a saber.';
+  bMsg.textContent = '(desbloqueado — verificación USDT en proceso)';
+  setTimeout(() => bMsg.textContent = '', 5000);
+  levelStartTime = Date.now() - (levelTime * 1000);
+  timerIv = setInterval(() => {
+    document.getElementById('h-time').textContent = Math.round((Date.now() - levelStartTime) / 1000) + 's';
+  }, 1000);
+  schedHint(); schedMove();
+}
+
 document.getElementById('btn-pay').addEventListener('click', async () => {
   const btn = document.getElementById('btn-pay');
   btn.textContent = 'Conectando con MercadoPago...';
