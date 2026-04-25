@@ -620,10 +620,11 @@ body.rage-4 #logo { animation:glitch1 0.8s infinite,glitch2 0.9s infinite 0.4s; 
 #board {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 5px;
+  grid-auto-rows: 1fr;
+  gap: clamp(4px, 1.2dvh, 8px);
   flex: 1;
   min-height: 0;
-  align-content: stretch;
+  align-content: start;
 }
 .tile {
   border-radius: 8px;
@@ -638,8 +639,7 @@ body.rage-4 #logo { animation:glitch1 0.8s infinite,glitch2 0.9s infinite 0.4s; 
   user-select: none;
   position: relative;
   overflow: hidden;
-  /* Cap max size — no más cartas gigantes */
-  max-height: clamp(70px, 18dvh, 120px);
+  height: clamp(60px, 13dvh, 110px);
   min-height: 44px;
 }
 .tile::before {
