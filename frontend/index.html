@@ -121,8 +121,111 @@ body {
   to{transform:translateY(120vh) rotate(720deg);opacity:0}
 }
 
-#wrap {
-  max-width: 480px;
+/* ── AI TOAST OVERLAY ── */
+#ai-toast {
+  position: fixed;
+  left: 50%;
+  top: 38%;
+  transform: translateX(-50%) translateY(-50%) scale(0.92);
+  max-width: 320px;
+  width: calc(100% - 48px);
+  background: rgba(10,10,15,0.95);
+  border: 1px solid rgba(127,119,221,0.35);
+  border-radius: 14px;
+  padding: 14px 18px;
+  z-index: 250;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  text-align: center;
+}
+#ai-toast.show { opacity:1; transform:translateX(-50%) translateY(-50%) scale(1); }
+#ai-toast-face { font-size:24px; display:block; margin-bottom:6px; }
+#ai-toast-txt { font-family:var(--mono); font-size:13px; color:var(--txt); line-height:1.55; font-style:italic; }
+#ai-toast-txt.negative { color:var(--red); }
+#ai-toast-txt.positive { color:var(--green); }
+#ai-toast-txt.cursed-msg { color:var(--cursed); }
+#ai-toast::before { content:''; position:absolute; top:0; left:20%; right:20%; height:1px; background:linear-gradient(90deg,transparent,rgba(127,119,221,0.6),transparent); }
+#ai-toast-progress { position:absolute; bottom:0; left:0; height:2px; background:var(--accent); border-radius:0 0 14px 14px; opacity:0.5; }
+
+/* ── SCREEN SHAKE ── */
+@keyframes shake-screen {
+  0%,100%{transform:translate(0,0) rotate(0)}
+  10%{transform:translate(-4px,-2px) rotate(-0.3deg)}
+  20%{transform:translate(4px,2px) rotate(0.3deg)}
+  30%{transform:translate(-3px,3px) rotate(-0.2deg)}
+  40%{transform:translate(3px,-1px) rotate(0.2deg)}
+  50%{transform:translate(-2px,2px) rotate(0)}
+  60%{transform:translate(2px,-2px) rotate(-0.1deg)}
+  70%{transform:translate(-1px,1px) rotate(0)}
+}
+body.shake { animation: shake-screen 0.4s cubic-bezier(0.36,0.07,0.19,0.97); }
+
+/* ── RAGE SYSTEM ── */
+@keyframes rage-flicker {
+  0%,100%{opacity:1} 50%{opacity:0.85}
+}
+body.rage-1 { --accent:#a09ddd; }
+body.rage-2 { --accent:#c4a0dd; }
+body.rage-3 #board-wrap { box-shadow: 0 0 20px rgba(216,90,48,0.15); border-radius:10px; }
+body.rage-3 #ai-bar { border-color:rgba(216,90,48,0.4); animation:rage-flicker 1.5s infinite,ai-pulse-border 3s ease-in-out infinite; }
+body.rage-4 #board-wrap { box-shadow: 0 0 35px rgba(248,113,113,0.25); }
+body.rage-4 #ai-bar { border-color:rgba(248,113,113,0.6); }
+body.rage-4 #logo { animation:glitch1 0.8s infinite,glitch2 0.9s infinite 0.4s; }
+
+/* ── DREAD MODE (1 error from paywall) ── */
+@keyframes dread-pulse {
+  0%,100%{box-shadow:0 0 0 0 rgba(248,113,113,0)} 
+  50%{box-shadow:0 0 0 6px rgba(248,113,113,0.15)}
+}
+#board-wrap.dread { animation: dread-pulse 1.2s ease-in-out infinite; border-radius:10px; }
+#board-wrap.dread .tile:not(.mat) { border-color: rgba(248,113,113,0.15); transition: border-color 0.5s; }
+
+/* ── EPIC COMBO FLASH ── */
+@keyframes epic-board-flash {
+  0%{background:rgba(127,119,221,0.18)}
+  100%{background:transparent}
+}
+#board-wrap.epic-flash { animation: epic-board-flash 0.5s ease-out; border-radius:10px; }
+
+/* ── NEAR MISS HIGHLIGHT ── */
+@keyframes near-miss-glow {
+  0%,100%{box-shadow:0 0 0 0 rgba(250,204,21,0)}
+  50%{box-shadow:0 0 12px 3px rgba(250,204,21,0.4)}
+}
+.tile.near-miss { animation: near-miss-glow 0.6s ease-in-out 3; border-color:var(--yellow) !important; }
+
+/* ── SHARE IMAGE BUTTON ── */
+.sc-share-img {
+  width:100%; margin-top:6px; padding:9px;
+  border-radius:8px;
+  background: rgba(127,119,221,0.12);
+  border:1px solid rgba(127,119,221,0.3);
+  color:var(--accent);
+  font-size:11px; font-family:var(--mono); cursor:pointer;
+  transition:all 0.15s;
+}
+.sc-share-img:hover { background:rgba(127,119,221,0.22); }
+
+/* ── MULT EXPLOSION ── */
+@keyframes mult-explode {
+  0%{transform:scale(1);text-shadow:none}
+  30%{transform:scale(2.2);text-shadow:0 0 20px currentColor}
+  60%{transform:scale(1.4);text-shadow:0 0 10px currentColor}
+  100%{transform:scale(1);text-shadow:none}
+}
+#h-mult.explode { animation: mult-explode 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+
+/* ── DAILY SEED BADGE ── */
+#daily-badge {
+  display:inline-flex; align-items:center; gap:4px;
+  background:rgba(250,204,21,0.1); border:1px solid rgba(250,204,21,0.25);
+  border-radius:20px; padding:2px 8px;
+  font-size:9px; color:var(--yellow);
+  font-family:var(--mono); margin-left:6px; vertical-align:middle;
+}
   margin: 0 auto;
   padding: 8px 12px 16px;
   position: relative;
@@ -732,25 +835,6 @@ body {
   transition: color 0.15s;
 }
 .pw-skip:hover { color: var(--txt2); }
-
-/* ── PAYMENT TABS ── */
-.pw-tabs { display:flex; gap:4px; margin-bottom:14px; background:var(--bg3); border-radius:8px; padding:3px; }
-.pw-tab { flex:1; padding:7px 4px; border:none; background:transparent; font-family:var(--sans); font-size:11px; font-weight:700; color:var(--txt3); cursor:pointer; border-radius:6px; transition:all 0.15s; letter-spacing:-0.01em; }
-.pw-tab.active { background:var(--bg2); color:var(--txt); border:1px solid var(--border2); }
-.pw-tab-panel { display:none; }
-.pw-tab-panel.active { display:block; }
-
-/* USDT panel */
-.pw-usdt-box { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:10px 10px 8px; margin-bottom:10px; }
-.pw-usdt-label { font-size:9px; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent); font-weight:700; margin-bottom:4px; display:block; }
-.pw-usdt-addr { font-family:var(--mono); font-size:9.5px; color:var(--txt2); word-break:break-all; line-height:1.5; margin-bottom:6px; }
-.pw-usdt-copy { width:100%; padding:6px; border-radius:5px; background:rgba(127,119,221,0.12); border:1px solid rgba(127,119,221,0.25); color:var(--accent); font-family:var(--sans); font-size:11px; font-weight:700; cursor:pointer; transition:all 0.15s; }
-.pw-usdt-copy:hover { background:rgba(127,119,221,0.22); }
-.pw-usdt-copy.copied { background:rgba(74,222,128,0.12); border-color:rgba(74,222,128,0.25); color:var(--green); }
-.pw-usdt-net { font-size:9px; color:var(--txt3); margin-top:5px; display:block; text-align:center; }
-.pw-btn-usdt-confirm { width:100%; padding:11px; border-radius:8px; background:var(--green); color:#000; border:none; font-size:13px; font-weight:700; font-family:var(--sans); cursor:pointer; margin-bottom:8px; transition:background 0.15s, transform 0.1s; opacity:0.4; pointer-events:none; }
-.pw-btn-usdt-confirm.ready { opacity:1; pointer-events:auto; }
-.pw-btn-usdt-confirm.ready:hover { background:#22c55e; transform:translateY(-1px); }
 
 .win-box {
   text-align: center;
@@ -1524,42 +1608,15 @@ body {
         <span class="pf">🤖</span>
         <h3 id="pw-title">Momento incómodo.</h3>
         <p id="pw-body">Esto es un paywall. No hay forma elegante de decirlo. Son $3.000. Menos que un café con medialunas en cualquier lado.</p>
-
-        <!-- TABS -->
-        <div class="pw-tabs">
-          <button class="pw-tab active" onclick="pwSwitchTab('mp')">💳 MercadoPago</button>
-          <button class="pw-tab" onclick="pwSwitchTab('usdt')">🟢 USDT</button>
+        <div class="pw-price">$3.000 ARS</div>
+        <span class="pw-sub">pago único · sin newsletter · sin drama</span>
+        <div class="pw-trust">
+          <span>🔒 Pago seguro vía</span>
+          <strong>MercadoPago</strong>
+          <span>· No guardamos tu tarjeta</span>
         </div>
-
-        <!-- PANEL MP -->
-        <div class="pw-tab-panel active" id="pw-panel-mp">
-          <div class="pw-price">$3.000 ARS</div>
-          <span class="pw-sub">pago único · sin newsletter · sin drama</span>
-          <div class="pw-trust">
-            <span>🔒 Pago seguro vía</span>
-            <strong>MercadoPago</strong>
-            <span>· No guardamos tu tarjeta</span>
-          </div>
-          <button class="pw-btn" id="btn-pay">Pagar $3.000 — MercadoPago →</button>
-          <button class="pw-btn pw-btn-life" id="btn-life" style="background:var(--orange);margin-bottom:8px;display:none">💀 Usar última vida (1 vez gratis)</button>
-        </div>
-
-        <!-- PANEL USDT -->
-        <div class="pw-tab-panel" id="pw-panel-usdt">
-          <div class="pw-price" style="font-size:22px;margin-bottom:2px;">~$2 USDT</div>
-          <span class="pw-sub">equivalente · red TRC-20 · pago único</span>
-          <div class="pw-usdt-box">
-            <span class="pw-usdt-label">Dirección TRC-20</span>
-            <div class="pw-usdt-addr" id="usdt-addr">TAKobVisVDmrNRhEmvETXRGG9Uq98MXbsM</div>
-            <button class="pw-usdt-copy" id="btn-copy-usdt" onclick="copyUsdtAddr()">📋 Copiar dirección</button>
-            <span class="pw-usdt-net">Red Tron (TRC-20) · USDT solamente</span>
-          </div>
-          <button class="pw-btn-usdt-confirm" id="btn-usdt-confirm" onclick="confirmUsdtPayment()">
-            ✓ Ya envié el USDT →
-          </button>
-          <p style="font-size:9.5px;color:var(--txt3);line-height:1.5;margin-bottom:8px;">Copiá la dirección, enviá el pago y después confirmá. Lo verificamos manualmente — puede tardar unos minutos.</p>
-        </div>
-
+        <button class="pw-btn" id="btn-pay">Pagar $3.000 — MercadoPago →</button>
+        <button class="pw-btn pw-btn-life" id="btn-life" style="background:var(--orange);margin-bottom:8px;display:none">💀 Usar última vida (1 vez gratis)</button>
         <div class="pw-made-by">Hecho por <a href="https://kairoinc.lat" target="_blank" rel="noopener">KAIRO</a> · Make it simple</div>
         <button class="pw-skip" id="btn-skip">Ahora no (el caos sigue igual)</button>
       </div>
@@ -1575,6 +1632,7 @@ body {
         <div class="sc-row"><span class="sc-row-label">tiempo</span><span class="sc-row-val" id="sc-time">0s</span></div>
         <div class="sc-row"><span class="sc-row-label">record personal</span><span class="sc-row-val" id="sc-best">—</span></div>
         <button class="sc-share" id="btn-share">📋 copiar resultado para compartir</button>
+        <button class="sc-share-img" id="btn-share-img">🖼 descargar imagen para compartir</button>
       </div>
       <button class="win-btn" id="btn-next">Siguiente nivel →</button>
     </div>
@@ -1605,6 +1663,13 @@ body {
     </div>
   </footer>
 
+</div>
+
+<!-- AI TOAST — mensaje invasivo sobre el tablero -->
+<div id="ai-toast">
+  <span id="ai-toast-face">🤖</span>
+  <div id="ai-toast-txt"></div>
+  <div id="ai-toast-progress"></div>
 </div>
 
 <script>
@@ -1758,6 +1823,12 @@ const AI = {
   mechanic_moving:['Las cartas se mueven solas ahora. Lo que memorizaste tiene fecha de vencimiento.','Desde este nivel el tablero te traiciona. Es una característica, no un bug.','Cuidado: las cartas cambian de lugar. Lo memorizaste bien. Ya no importa.'],
   mechanic_chaos:['Más cartas. Más movimiento. Más mentiras de mi parte. Bienvenido al caos doble.','Este nivel es lo que pasa cuando el diseñador estaba enojado. Que lo disfrutes.','Ocho pares. Se mueven solos. Yo miento el 45% del tiempo. Que empiece.'],
   mechanic_nightmare:['Modo pesadilla. Todo junto. No tengo más comentarios.','Este es el nivel donde la mayoría se rinde. No lo digo para motivarte.','Llegaste al final. O al principio del infierno. Depende del punto de vista.'],
+  rage_1:['La IA empieza a notar un patrón. No es bueno.','Esto no estaba en el contrato de onboarding.'],
+  rage_2:['¿Cuántos errores son ya? Muchos. Demasiados para seguir callada.','La IA está tomando notas para el informe post-mortem.'],
+  rage_3:['SISTEMA: se detectó frustración extrema. La IA no siente empatía. Lo confirma ahora.','Esto... esto ya es demasiado. Incluso para mí.','Tres errores seguidos. Cuatro. La IA perdió la cuenta y la fe.'],
+  rage_4:['ERROR CRÍTICO: jugador.exe no responde a la lógica.','La IA considera retirarse. No lo va a hacer. Pero lo considera.','Este nivel de caos no fue diseñado. Emergió solo. Como vos.'],
+  near_miss:['Ese emoji lo intentaste antes. La IA lo anotó. El tablero también.','¿Otra vez ese? Hay algo en esa carta que no te deja ir.','Insistís con el mismo. Eso dice mucho de vos. La IA no va a decir qué.'],
+  dread:['Un error más. Solo uno. La IA no va a decir lo que pasa después.','El siguiente error tiene consecuencias. La IA está lista. Vos no.','Silencio. La IA espera. El tablero también. Un error más.'],
   return_after_loss:['Volviste. La IA lo anotó.','Ah. Decidiste intentarlo de nuevo. Interesante decisión.','De vuelta. El orgullo tiene formas raras de manifestarse.','¿No podías dejarlo así? Claro que no.'],
   return_from_session:['Volviste. Han pasado horas. La IA no se fue.','Ausencia registrada. La IA siguió acá esperando. Sin hacer nada. Como siempre.','¿Pensaste en nosotros mientras estabas afuera? No. Normal.','Regreso detectado. El juego guardó tu record. Y tu vergüenza.'],
   idle:['Seguís ahí. El juego también. Alguien tiene que moverse.','Tomando tu tiempo. La IA espera. Con desgano, pero espera.','¿Estás pensando o te fuiste? Da igual. El tablero no se va a resolver solo.','Silencio. Bien. El caos puede esperar. Yo no tengo ningún otro lugar donde estar.'],
@@ -1802,6 +1873,15 @@ let lifeUsed=false;
 let consecutiveErrors=0;
 let lastMultBeforeError=1;
 let returnFromLoss=false;
+
+// ── NUEVOS SISTEMAS ──
+let rageLevel=0;                  // 0-4: cuánto odio acumuló la IA
+let nearMissMap={};               // emoji → cuántas veces fallaste este par
+let lastWrongEmoji=null;          // para detectar near-miss
+let sessionBestAiQuote='';        // mejor frase de la sesión para share
+let dreadMode=false;              // 1 error del paywall
+let totalSessionErrors=0;         // errores totales de la sesión completa
+let sessionStartEmojiPattern=[];  // patrón de juego para IA memory
 
 try {
   const saved = JSON.parse(localStorage.getItem('glitch_v2')||'{}');
@@ -1881,6 +1961,232 @@ const STATUS_MSGS = {
   mechanic_nightmare: 'activando modo pesadilla',
 };
 
+// Momentos que merecen toast invasivo
+const TOAST_KEYS = new Set([
+  'bad','bad_streak','first_error','frustration','mult_danger',
+  'combo_long','new_record','cursed_hit','curse','win',
+  'mechanic_cursed','mechanic_moving','mechanic_chaos','mechanic_nightmare',
+  'pw','shuffle_warn','good_mult_high',
+  'rage_1','rage_2','rage_3','rage_4','near_miss','dread',
+]);
+
+// ── SCREEN SHAKE ──
+function screenShake(intensity='medium') {
+  document.body.classList.remove('shake');
+  void document.body.offsetWidth;
+  document.body.classList.add('shake');
+  setTimeout(()=>document.body.classList.remove('shake'), 400);
+}
+
+// ── RAGE SYSTEM ──
+function updateRage(delta) {
+  const prev = rageLevel;
+  rageLevel = Math.max(0, Math.min(4, rageLevel + delta));
+  // Actualizar clases en body
+  for(let i=0;i<=4;i++) document.body.classList.remove('rage-'+i);
+  if(rageLevel > 0) document.body.classList.add('rage-'+rageLevel);
+  // Trigger toast de rage si subió de nivel
+  if(rageLevel > prev && rageLevel >= 1) {
+    const k = 'rage_'+rageLevel;
+    if(AI[k]) say(k);
+  }
+}
+
+// ── DREAD MODE (1 error del paywall) ──
+function activateDread() {
+  if(dreadMode || paid) return;
+  dreadMode = true;
+  document.getElementById('board-wrap').classList.add('dread');
+  say('dread');
+  // Sonido de tensión
+  playTone(80,'sawtooth',1.5,0.06,-200);
+}
+function deactivateDread() {
+  dreadMode = false;
+  document.getElementById('board-wrap').classList.remove('dread');
+}
+
+// ── NEAR MISS DETECTOR ──
+function trackNearMiss(emoji) {
+  nearMissMap[emoji] = (nearMissMap[emoji] || 0) + 1;
+  if(nearMissMap[emoji] >= 2) {
+    // Este par fue fallado 2+ veces — highlight y AI comment
+    const tiles = [...board.querySelectorAll('.tile:not(.mat)')];
+    tiles.filter(t=>t.dataset.e===emoji).forEach(t=>{
+      t.classList.add('near-miss');
+      setTimeout(()=>t.classList.remove('near-miss'),2000);
+    });
+    if(nearMissMap[emoji] === 2) say('near_miss');
+  }
+}
+
+// ── EPIC COMBO BOARD FLASH ──
+function epicBoardFlash() {
+  const wrap = document.getElementById('board-wrap');
+  wrap.classList.remove('epic-flash');
+  void wrap.offsetWidth;
+  wrap.classList.add('epic-flash');
+  setTimeout(()=>wrap.classList.remove('epic-flash'),500);
+}
+
+// ── DAILY SEED ──
+function getDailySeed() {
+  const d = new Date();
+  return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+}
+function seededRandom(seed) {
+  let h = 0;
+  for(let i=0;i<seed.length;i++) h = Math.imul(31,h)+seed.charCodeAt(i)|0;
+  return function() { h ^= h << 13; h ^= h >> 17; h ^= h << 5; return (h>>>0)/4294967296; };
+}
+
+// ── GENERATE SHARE IMAGE ──
+function generateShareImage() {
+  const S = 1080;
+  const canvas = document.createElement('canvas');
+  canvas.width = S; canvas.height = S;
+  const ctx = canvas.getContext('2d');
+
+  // Background
+  ctx.fillStyle = '#0a0a0f';
+  ctx.fillRect(0,0,S,S);
+
+  // Dot grid
+  ctx.fillStyle = 'rgba(127,119,221,0.06)';
+  for(let x=36;x<S;x+=36) for(let y=36;y<S;y+=36) {
+    ctx.beginPath(); ctx.arc(x,y,1.5,0,Math.PI*2); ctx.fill();
+  }
+
+  // Glow
+  const g = ctx.createRadialGradient(S*0.5,S*0.35,0,S*0.5,S*0.35,S*0.5);
+  g.addColorStop(0,'rgba(127,119,221,0.12)'); g.addColorStop(1,'transparent');
+  ctx.fillStyle=g; ctx.fillRect(0,0,S,S);
+
+  const PAD = 80;
+
+  // GLITCH logo
+  ctx.font = '800 92px Syne, sans-serif';
+  ctx.textAlign = 'center';
+  // Glitch effect layers
+  ctx.fillStyle = 'rgba(248,113,113,0.6)';
+  ctx.fillText('GLITCH', S/2-3, 180);
+  ctx.fillStyle = 'rgba(127,119,221,0.6)';
+  ctx.fillText('GLITCH', S/2+3, 180);
+  ctx.fillStyle = '#e8e8f0';
+  ctx.fillText('GLITCH', S/2, 180);
+
+  // Tagline
+  ctx.font = '400 22px Space Mono, monospace';
+  ctx.fillStyle = 'rgba(136,136,160,0.8)';
+  ctx.fillText('el juego que te odia', S/2, 225);
+
+  // Divider
+  ctx.strokeStyle = 'rgba(127,119,221,0.25)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(PAD,260); ctx.lineTo(S-PAD,260); ctx.stroke();
+
+  // AI Quote — the viral element
+  const quote = sessionBestAiQuote || aiTxt.textContent || 'El juego tomó nota.';
+  ctx.font = 'italic 400 28px Space Mono, monospace';
+  ctx.fillStyle = '#7F77DD';
+  ctx.textAlign = 'center';
+  // Word wrap
+  const words = ('"'+quote+'"').split(' ');
+  const lines = []; let cur = '';
+  words.forEach(w => {
+    const test = cur ? cur+' '+w : w;
+    if(ctx.measureText(test).width > S-PAD*2-40 && cur) { lines.push(cur); cur=w; }
+    else cur=test;
+  });
+  if(cur) lines.push(cur);
+  lines.slice(0,4).forEach((line,i) => ctx.fillText(line, S/2, 320+i*42));
+
+  const statsY = 320 + Math.min(lines.length,4)*42 + 40;
+
+  // Stats grid
+  const stats = [
+    { label:'NIVEL', val: String(lv+1) },
+    { label:'SCORE', val: score+' pts' },
+    { label:'MULT', val: '×'+mult.toFixed(1) },
+    { label:'RACHA', val: String(bestStreak) },
+    { label:'TIEMPO', val: levelTime+'s' },
+    { label:'EFECT.', val: moveCount>0?Math.round((pf/moveCount)*100)+'%':'—' },
+  ];
+  const cols=3, cellW=(S-PAD*2)/cols, cellH=90;
+  stats.forEach((s,i)=>{
+    const col=i%cols, row=Math.floor(i/cols);
+    const x=PAD+col*cellW, y=statsY+row*cellH;
+    // Cell bg
+    ctx.fillStyle='rgba(17,17,24,0.8)';
+    roundRect(ctx,x+4,y+4,cellW-8,cellH-8,10); ctx.fill();
+    ctx.strokeStyle='rgba(127,119,221,0.2)';ctx.lineWidth=1;
+    roundRect(ctx,x+4,y+4,cellW-8,cellH-8,10); ctx.stroke();
+    // Label
+    ctx.font='700 13px Space Mono,monospace';
+    ctx.fillStyle='rgba(68,68,90,0.9)';
+    ctx.textAlign='center';
+    ctx.fillText(s.label, x+cellW/2, y+28);
+    // Value
+    ctx.font='700 28px Syne,sans-serif';
+    ctx.fillStyle= i===1&&isNewRecord?'#facc15':'#e8e8f0';
+    ctx.fillText(s.val, x+cellW/2, y+62);
+  });
+
+  const footY = statsY + Math.ceil(stats.length/cols)*cellH + 36;
+
+  // Footer
+  ctx.strokeStyle='rgba(127,119,221,0.15)';
+  ctx.beginPath(); ctx.moveTo(PAD,footY); ctx.lineTo(S-PAD,footY); ctx.stroke();
+  ctx.font='400 18px Space Mono,monospace';
+  ctx.fillStyle='rgba(127,119,221,0.5)';
+  ctx.textAlign='center';
+  ctx.fillText('glitchcaos.netlify.app', S/2, footY+32);
+
+  // Download
+  const link = document.createElement('a');
+  link.download = `glitch-nivel${lv+1}-${score}pts.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);
+  ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);
+  ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);
+  ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);
+  ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+}
+
+let _toastTimer = null;
+
+function showAiToast(txt, mood, duration = 2800) {
+  const toast = document.getElementById('ai-toast');
+  const toastTxt = document.getElementById('ai-toast-txt');
+  const toastProgress = document.getElementById('ai-toast-progress');
+
+  // Reset
+  clearTimeout(_toastTimer);
+  toast.classList.remove('show');
+  void toast.offsetWidth;
+
+  toastTxt.textContent = txt;
+  toastTxt.className = mood || '';
+  toastProgress.style.transition = 'none';
+  toastProgress.style.width = '100%';
+
+  toast.classList.add('show');
+
+  // Progress bar animation
+  requestAnimationFrame(() => {
+    toastProgress.style.transition = `width ${duration}ms linear`;
+    toastProgress.style.width = '0%';
+  });
+
+  _toastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+  }, duration);
+}
+
 let _sayIv = null;
 function say(k, vars={}) {
   const txt = pick(AI[k]||AI.good, vars);
@@ -1909,6 +2215,18 @@ function say(k, vars={}) {
 
   document.getElementById('ai-status').innerHTML =
     `<span id="ai-status-dot"></span>${statusTxt}`;
+
+  // Toast invasivo para los momentos que importan
+  if (TOAST_KEYS.has(k)) {
+    const toastDuration = k === 'win' || k === 'new_record' ? 3500
+      : k === 'mechanic_cursed' || k === 'mechanic_moving' || k === 'mechanic_chaos' || k === 'mechanic_nightmare' ? 3200
+      : 2600;
+    showAiToast(txt, mood, toastDuration);
+  }
+
+  // Guardar mejor frase para share image
+  const viralKeys = new Set(['bad_streak','frustration','mult_danger','rage_2','rage_3','rage_4','near_miss','combo_long','new_record','cursed_hit']);
+  if(viralKeys.has(k)) sessionBestAiQuote = txt;
 }
 
 function haptic(type='light'){
@@ -2056,6 +2374,10 @@ function build(){
 
   sessionPlays++;
   document.getElementById('session-plays').textContent = sessionPlays;
+  // Reset new systems
+  rageLevel=0; nearMissMap={}; dreadMode=false;
+  for(let i=0;i<=4;i++) document.body.classList.remove('rage-'+i);
+  document.getElementById('board-wrap').classList.remove('dread');
 
   const cfg = getLevelConfig(lv);
   const emojis = SETS[lv%SETS.length];
@@ -2205,10 +2527,16 @@ function onTile(tile){
         streak++;
         consecutiveErrors=0;
         if(streak>bestStreak) bestStreak=streak;
+        // Reset near-miss for this emoji on match
+        delete nearMissMap[a.dataset.e];
+        // Calm rage on streak
+        if(streak>=3) updateRage(-1);
+        deactivateDread();
 
         const streakBonusPts = streak>=3 ? Math.round((streak-2)*0.15*10*mult) : 0;
         const pts = Math.round(10*mult) + streakBonusPts;
         score += pts;
+        const prevMult = mult;
         mult = Math.min(10, Math.round((mult+0.5)*10)/10);
         sel=[]; locked=false;
 
@@ -2218,9 +2546,20 @@ function onTile(tile){
         updateStreak();
         resetIdleTimer();
 
+        // Mult milestone explosion
+        const multMilestones = [3,5,7,10];
+        if(multMilestones.includes(Math.floor(mult)) && Math.floor(mult) > Math.floor(prevMult)) {
+          hMult.classList.remove('explode');
+          void hMult.offsetWidth;
+          hMult.classList.add('explode');
+          setTimeout(()=>hMult.classList.remove('explode'),500);
+          epicBoardFlash();
+        }
+
         if(streak>=5) {
           showCombo(streak); SFX.combo(streak);
           say('combo_long', {n:streak});
+          epicBoardFlash();
         } else if(streak>=3) {
           showCombo(streak); SFX.combo(streak);
           say('good_streak', {n:streak});
@@ -2240,14 +2579,25 @@ function onTile(tile){
         else { schedHint(); schedMove(); }
       }, 350);
     } else {
-      wrongs++; totalErrors++;
+      wrongs++; totalErrors++; totalSessionErrors++;
       consecutiveErrors++;
       streak=0; updateStreak();
       const multBeforeError = mult;
+
+      // Near miss tracking
+      trackNearMiss(a.dataset.e);
+
+      // Rage escalation
+      updateRage(+1);
+
+      // Dread mode: 1 error del paywall
+      if(wrongs === 3 && !paid) activateDread();
+
       setTimeout(()=>{
         a.classList.add('bad'); b.classList.add('bad');
         SFX.error();
         haptic('error');
+        screenShake();
         floatScore(0, a, true);
         setTimeout(()=>{
           a.textContent='?'; b.textContent='?';
@@ -2431,14 +2781,16 @@ function copyToClipboard(text) {
 document.getElementById('btn-share').addEventListener('click',()=>{
   const rating = mult>=7?'🔥':mult>=5?'⚡':mult>=3?'💫':'🎮';
   const efficiency = moveCount > 0 ? Math.round((pf/moveCount)*100) : 0;
+  const aiQuote = sessionBestAiQuote || aiTxt.textContent || 'El juego tomó nota.';
   const text =
     `${rating} GLITCH — Nivel ${lv+1} completado\n`+
     `📊 Score: ${score} pts\n`+
     `✖️ Mult final: ×${mult.toFixed(1)}\n`+
     `🔥 Racha máxima: ${bestStreak}\n`+
     `🃏 Jugadas: ${moveCount} (${efficiency}% efectividad)\n`+
-    `⏱ Tiempo: ${levelTime}s\n`+
-    `— glitch, el juego que te odia`;
+    `⏱ Tiempo: ${levelTime}s\n\n`+
+    `🤖 "${aiQuote}"\n\n`+
+    `— glitchcaos.netlify.app`;
   const btn = document.getElementById('btn-share');
   copyToClipboard(text).then(()=>{
     btn.textContent='✓ copiado';
@@ -2449,6 +2801,16 @@ document.getElementById('btn-share').addEventListener('click',()=>{
     prompt('Copiá esto:', text);
     setTimeout(()=>{btn.textContent='📋 copiar resultado para compartir';},2000);
   });
+});
+
+document.getElementById('btn-share-img').addEventListener('click', () => {
+  const btn = document.getElementById('btn-share-img');
+  btn.textContent = 'Generando imagen...';
+  setTimeout(() => {
+    generateShareImage();
+    btn.textContent = '✓ imagen descargada';
+    setTimeout(()=>btn.textContent='🖼 descargar imagen para compartir',2500);
+  }, 100);
 });
 
 // ─── PAYMENT CONFIRMED ────────────────────────────────────────────────────────
@@ -2490,57 +2852,6 @@ document.getElementById('btn-pr-continue').addEventListener('click', () => {
 });
 
 // ─── BUTTONS ──────────────────────────────────────────────────────────────────
-// ── PAYMENT TABS ──────────────────────────────────────────────────────────────
-function pwSwitchTab(tab) {
-  document.querySelectorAll('.pw-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.pw-tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelector(`.pw-tab[onclick="pwSwitchTab('${tab}')"]`).classList.add('active');
-  document.getElementById(`pw-panel-${tab}`).classList.add('active');
-}
-
-function copyUsdtAddr() {
-  const addr = 'TAKobVisVDmrNRhEmvETXRGG9Uq98MXbsM';
-  const btn = document.getElementById('btn-copy-usdt');
-  const confirmBtn = document.getElementById('btn-usdt-confirm');
-  navigator.clipboard.writeText(addr).catch(() => {});
-  btn.textContent = '✓ Dirección copiada';
-  btn.classList.add('copied');
-  // Enable confirm button after copy
-  setTimeout(() => {
-    confirmBtn.classList.add('ready');
-  }, 800);
-  setTimeout(() => {
-    btn.textContent = '📋 Copiar dirección';
-    btn.classList.remove('copied');
-  }, 2500);
-}
-
-async function confirmUsdtPayment() {
-  const btn = document.getElementById('btn-usdt-confirm');
-  btn.textContent = 'Verificando...';
-  btn.style.pointerEvents = 'none';
-  // Notify backend of USDT payment claim
-  try {
-    await fetch(`${BACKEND_URL}/usdt-claim`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sessionId: SESSION_ID, wallet: 'TAKobVisVDmrNRhEmvETXRGG9Uq98MXbsM' })
-    });
-  } catch(e) {}
-  // Optimistic unlock with pending message
-  paid = true;
-  pw.classList.remove('on');
-  locked = false;
-  aiTxt.textContent = 'Pago en revisión. Si no llegó, el caos va a saber.';
-  bMsg.textContent = '(desbloqueado — verificación USDT en proceso)';
-  setTimeout(() => bMsg.textContent = '', 5000);
-  levelStartTime = Date.now() - (levelTime * 1000);
-  timerIv = setInterval(() => {
-    document.getElementById('h-time').textContent = Math.round((Date.now() - levelStartTime) / 1000) + 's';
-  }, 1000);
-  schedHint(); schedMove();
-}
-
 document.getElementById('btn-pay').addEventListener('click', async () => {
   const btn = document.getElementById('btn-pay');
   btn.textContent = 'Conectando con MercadoPago...';
